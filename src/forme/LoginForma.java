@@ -46,6 +46,8 @@ public class LoginForma extends javax.swing.JFrame {
 
         jLabel1.setText("Username:");
 
+        jTextFieldUsername.setText("marko");
+
         jLabel2.setText("Password:");
 
         jPasswordField1.setText("MarkoLozinka2025");
@@ -122,7 +124,7 @@ public class LoginForma extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public void loginAddActionListener(ActionListener actionListener) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        jButtonLogin.addActionListener(actionListener);
     }
 
 }

@@ -47,4 +47,8 @@ public class LoginController {
         });
     }
 
+    public void otvoriFormu() {
+        lf.setVisible(true);
+    }
+
 }
