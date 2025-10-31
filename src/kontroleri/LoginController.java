@@ -38,9 +38,11 @@ public class LoginController {
                 Administrator a = komunikacija.Komunikacija.getInstanca().login(user, pass);
 
                 if (a == null) {
-                    JOptionPane.showMessageDialog(lf, "NEUSPESNA PRIJAVA", "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(lf, "Pogresni kredencijali za prijavu", "GRESKA", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(lf, "USPESNA PRIJAVA", "USPEH", JOptionPane.INFORMATION_MESSAGE);
+                    coordinator.Coordinator.getInstanca().setAdmin(a);
+                    JOptionPane.showMessageDialog(lf, "Uspesno ste se prijavili", "USPEH", JOptionPane.INFORMATION_MESSAGE);
+                    coordinator.Coordinator.getInstanca().otvoriGlavnuFormu();
                     lf.dispose();
                 }
             }

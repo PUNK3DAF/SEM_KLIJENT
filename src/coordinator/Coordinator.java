@@ -4,8 +4,23 @@
  */
 package coordinator;
 
+import domen.Administrator;
+import forme.DodajAnsamblForma;
+import forme.DodajClanForma;
+import forme.FormaMod;
+import forme.GlavnaForma;
 import forme.LoginForma;
+import forme.PrikazAnsambalaForma;
+import forme.PrikazClanovaForma;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import kontroleri.DodajAnsamblController;
+import kontroleri.DodajClanController;
+import kontroleri.GlavnaFormaController;
 import kontroleri.LoginController;
+import kontroleri.PrikazAnsambalaController;
+import kontroleri.PrikazClanovaController;
 
 /**
  *
@@ -14,9 +29,17 @@ import kontroleri.LoginController;
 public class Coordinator {
 
     private static Coordinator instanca;
+    private Administrator admin;
     private LoginController loginCont;
+    private GlavnaFormaController glavnaFormaCont;
+    private PrikazAnsambalaController paCont;
+    private DodajAnsamblController daCont;
+    private PrikazClanovaController pcCont;
+    private DodajClanController dcCont;
+    private Map<String, Object> parametri;
 
     private Coordinator() {
+        parametri = new HashMap<>();
     }
 
     public static Coordinator getInstanca() {
@@ -31,4 +54,78 @@ public class Coordinator {
         loginCont.otvoriFormu();
     }
 
+    public void otvoriGlavnuFormu() {
+        glavnaFormaCont = new GlavnaFormaController(new GlavnaForma());
+        glavnaFormaCont.otvoriFormu();
+    }
+
+    public void setAdmin(Administrator admin) {
+        this.admin = admin;
+    }
+
+    public Administrator getAdmin() {
+        return admin;
+    }
+
+    public void otvoriPrikazAnsamblFormu() {
+        paCont = new PrikazAnsambalaController(new PrikazAnsambalaForma());
+        paCont.otvoriFormu();
+    }
+
+    public void otvoriDodajAnsamblFormu() {
+        daCont = new DodajAnsamblController(new DodajAnsamblForma());
+        daCont.otvoriFormu(FormaMod.DODAJ);
+    }
+
+    public void dodajParam(String s, Object o) {
+        parametri.put(s, o);
+    }
+
+    public Object vratiParam(String s) {
+        return parametri.get(s);
+    }
+
+    public void otvoriIzmeniAnsamblFormu() {
+        daCont = new DodajAnsamblController(new DodajAnsamblForma());
+        daCont.otvoriFormu(FormaMod.IZMENI);
+    }
+
+    public void osveziFormu() {
+        if (paCont != null) {
+            paCont.osveziFormu();
+        } else {
+            System.out.println("DBG: paCont == null, nema otvorene forme za ansamble za osvezenje.");
+        }
+    }
+
+    public void otvoriPrikazClanFormu() {
+        pcCont = new PrikazClanovaController(new PrikazClanovaForma());
+        pcCont.otvoriFormu();
+    }
+
+    public void osveziClanFormu() {
+        if (pcCont != null) {
+            pcCont.osveziFormu();
+        } else {
+            System.out.println("DBG: pcCont == null, nema otvorene forme za clanove za osvezenje.");
+        }
+    }
+
+    public void otvoriDodajClanFormu() {
+        dcCont = new DodajClanController(new DodajClanForma());
+        dcCont.otvoriFormu(FormaMod.DODAJ);
+    }
+
+    public void otvoriIzmeniClanFormu() {
+        dcCont = new DodajClanController(new DodajClanForma());
+        dcCont.otvoriFormu(FormaMod.IZMENI);
+    }
+
+    public void osveziGlavnuFormu() {
+        if (glavnaFormaCont != null) {
+            glavnaFormaCont.osveziUcesceTabela();
+        } else {
+            System.out.println("DBG: glavnaFormaCont == null, nema otvorene glavne forme za osvezenje.");
+        }
+    }
 }
