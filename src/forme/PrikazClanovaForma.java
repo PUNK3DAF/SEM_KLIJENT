@@ -47,7 +47,7 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
         jButtonAzuriraj = new javax.swing.JButton();
         jButtonPrikazi = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTableClanovi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -79,6 +79,11 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
         jButtonAzuriraj.setText("AZURIRAJ");
 
         jButtonPrikazi.setText("PRIKAZI");
+        jButtonPrikazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPrikaziActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -164,6 +169,10 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonPrikaziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrikaziActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonPrikaziActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAzuriraj;
