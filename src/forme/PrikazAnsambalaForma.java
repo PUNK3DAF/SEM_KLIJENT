@@ -87,7 +87,7 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
         jTextFieldAdmin = new javax.swing.JTextField();
         jButtonPretraga = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTableAnsambli.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
