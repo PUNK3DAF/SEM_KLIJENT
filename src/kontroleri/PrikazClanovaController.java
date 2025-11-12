@@ -139,7 +139,7 @@ public class PrikazClanovaController {
                     javax.swing.JOptionPane.showMessageDialog(pcf,
                             "Sistem ne moze da nadje clanove drustva po zadatoj vrednosti.",
                             "Informacija",
-                            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
                 } else {
                     javax.swing.JOptionPane.showMessageDialog(pcf,
                             "Sistem je nasao clanove drustva po zadatoj vrednosti.",
