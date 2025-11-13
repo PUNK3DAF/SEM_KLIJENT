@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,6 +54,11 @@ public class Komunikacija {
         Zahtev z = new Zahtev(Operacije.ADMIN_LOGIN, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() instanceof Exception) {
+            return null;
+        }
+
         return (Administrator) odg.getOdgovor();
     }
 
