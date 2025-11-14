@@ -87,6 +87,8 @@ public class Komunikacija {
             } else {
                 serverEx = new Exception(String.valueOf(odg.getOdgovor()));
             }
+            String poruka = serverEx.getMessage() != null ? serverEx.getMessage() : String.valueOf(odg.getOdgovor());
+            JOptionPane.showMessageDialog(null, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
             throw serverEx;
         }
     }
