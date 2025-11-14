@@ -73,7 +73,7 @@ public class Komunikacija {
         return ansambli;
     }
 
-    public void obrisiAnsambl(Ansambl a) {
+    public void obrisiAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.OBRISI_ANSAMBL, a);
         posiljalac.posalji(z);
 
@@ -81,13 +81,13 @@ public class Komunikacija {
         if (odg.getOdgovor() == null) {
             System.out.println("USPEH");
         } else {
-            System.out.println("GRESKA");
-            ((Exception) odg.getOdgovor()).printStackTrace();
-            try {
-                throw new Exception("GRESKA");
-            } catch (Exception ex) {
-                Logger.getLogger(Komunikacija.class.getName()).log(Level.SEVERE, null, ex);
+            Exception serverEx;
+            if (odg.getOdgovor() instanceof Exception) {
+                serverEx = (Exception) odg.getOdgovor();
+            } else {
+                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
             }
+            throw serverEx;
         }
     }
 
