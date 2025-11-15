@@ -102,12 +102,47 @@ public class DodajClanController {
                     dcf.dispose();
                     coordinator.Coordinator.getInstanca().osveziClanFormu();
                 } catch (Exception ex) {
+                    // prikaz po dokumentaciji (latinica bez dijakritika)
                     String razlog = ex.getMessage() == null ? "" : ex.getMessage();
                     String poruka = "Sistem ne moze da zapamti clana drustva";
                     if (!razlog.isEmpty()) {
                         poruka += "\nRazlog: " + razlog;
                     }
                     JOptionPane.showMessageDialog(dcf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
+
+                    // pokusaj da osvezis formu sa vrednostima iz baze (vrati originalni objekat)
+                    final ClanDrustva savedOriginal = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
+                    if (savedOriginal != null && savedOriginal.getClanID() > 0) {
+                        new javax.swing.SwingWorker<ClanDrustva, Void>() {
+                            @Override
+                            protected ClanDrustva doInBackground() throws Exception {
+                                // poziv serveru izvrsiti u pozadini
+                                return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(savedOriginal.getClanID());
+                            }
+
+                            @Override
+                            protected void done() {
+                                try {
+                                    ClanDrustva fresh = get();
+                                    if (fresh != null) {
+                                        coordinator.Coordinator.getInstanca().dodajParam("clan", fresh);
+                                        dcf.getjTextFieldIme().setText(fresh.getClanIme() == null ? "" : fresh.getClanIme());
+                                        dcf.getjTextFieldPol().setText(fresh.getClanPol() == null ? "" : fresh.getClanPol());
+                                        dcf.getjTextFieldGod().setText(fresh.getClanGod() > 0 ? String.valueOf(fresh.getClanGod()) : "");
+                                        dcf.getjTextFieldTel().setText(fresh.getClanBrTel() == null ? "" : fresh.getClanBrTel());
+                                    } else {
+                                        // clan ne postoji u bazi -> isprazni polja
+                                        dcf.getjTextFieldIme().setText("");
+                                        dcf.getjTextFieldPol().setText("");
+                                        dcf.getjTextFieldGod().setText("");
+                                        dcf.getjTextFieldTel().setText("");
+                                    }
+                                } catch (Exception ex2) {
+                                    // tihi fail: ne radimo nista dodatno, mozemo logovati ako zelis
+                                }
+                            }
+                        }.execute();
+                    }
                 }
             }
         });
