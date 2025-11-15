@@ -157,25 +157,22 @@ public class Komunikacija {
     }
 
     public void dodajClan(ClanDrustva c) throws Exception {
-        Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
-        posiljalac.posalji(z);
+    Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
+    posiljalac.posalji(z);
 
-        Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            JOptionPane.showMessageDialog(null, "Sistem je kreirao clana drustva", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
-            coordinator.Coordinator.getInstanca().osveziClanFormu();
+    Odgovor odg = (Odgovor) primalac.primi();
+    if (odg.getOdgovor() == null) {
+        System.out.println("USPEH");
+    } else {
+        Exception serverEx;
+        if (odg.getOdgovor() instanceof Exception) {
+            serverEx = (Exception) odg.getOdgovor();
         } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            String poruka = serverEx.getMessage() != null ? serverEx.getMessage() : String.valueOf(odg.getOdgovor());
-            JOptionPane.showMessageDialog(null, "Sistem ne moze da kreira clana drustva.\nRazlog: " + poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-            throw serverEx;
+            serverEx = new Exception(String.valueOf(odg.getOdgovor()));
         }
+        throw serverEx;
     }
+}
 
     public void azurirajClan(ClanDrustva c) throws Exception {
         Zahtev z = new Zahtev(Operacije.AZURIRAJ_CLAN, c);
