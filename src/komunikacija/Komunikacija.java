@@ -162,7 +162,8 @@ public class Komunikacija {
 
         Odgovor odg = (Odgovor) primalac.primi();
         if (odg.getOdgovor() == null) {
-            System.out.println("USPEH - clan dodat");
+            JOptionPane.showMessageDialog(null, "Sistem je kreirao clana drustva", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            coordinator.Coordinator.getInstanca().osveziClanFormu();
         } else {
             Exception serverEx;
             if (odg.getOdgovor() instanceof Exception) {
@@ -170,6 +171,8 @@ public class Komunikacija {
             } else {
                 serverEx = new Exception(String.valueOf(odg.getOdgovor()));
             }
+            String poruka = serverEx.getMessage() != null ? serverEx.getMessage() : String.valueOf(odg.getOdgovor());
+            JOptionPane.showMessageDialog(null, "Sistem ne moze da kreira clana drustva.\nRazlog: " + poruka, "Greska", JOptionPane.ERROR_MESSAGE);
             throw serverEx;
         }
     }
