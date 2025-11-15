@@ -32,7 +32,7 @@ public class PrikazClanovaController {
             public void actionPerformed(ActionEvent e) {
                 int red = pcf.getjTableClanovi().getSelectedRow();
                 if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf, "Niste izabrali člana", "Greška", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 final forme.model.ModelTabeleClan mtc = (forme.model.ModelTabeleClan) pcf.getjTableClanovi().getModel();
@@ -80,7 +80,7 @@ public class PrikazClanovaController {
             public void actionPerformed(ActionEvent e) {
                 int red = pcf.getjTableClanovi().getSelectedRow();
                 if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf, "Niste izabrali člana", "Greška", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 final forme.model.ModelTabeleClan mtc = (forme.model.ModelTabeleClan) pcf.getjTableClanovi().getModel();
@@ -100,14 +100,14 @@ public class PrikazClanovaController {
                                     && full.getClanIme() != null && !full.getClanIme().trim().isEmpty();
                             if (!valid) {
                                 javax.swing.JOptionPane.showMessageDialog(pcf,
-                                        "Sistem je učitao člana, ali podaci nisu potpuni.",
-                                        "Greška",
+                                        "Sistem je ucitao clana, ali podaci nisu potpuni.",
+                                        "Greska",
                                         javax.swing.JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
 
                             javax.swing.JOptionPane.showMessageDialog(pcf,
-                                    "Sistem je učitao člana društva.",
+                                    "Sistem je ucitao clana drustva.",
                                     "Informacija",
                                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
@@ -116,8 +116,8 @@ public class PrikazClanovaController {
 
                         } catch (Exception ex) {
                             javax.swing.JOptionPane.showMessageDialog(pcf,
-                                    "Sistem ne može da učita člana društva.",
-                                    "Greška",
+                                    "Sistem ne moze da ucita clana drustva.",
+                                    "Greska",
                                     javax.swing.JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -154,10 +154,7 @@ public class PrikazClanovaController {
             public void actionPerformed(ActionEvent e) {
                 int red = pcf.getjTableClanovi().getSelectedRow();
                 if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf,
-                            "Niste izabrali clana",
-                            "Greska",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
