@@ -44,28 +44,36 @@ public class DodajAnsamblController {
                     a.setUcesca(ucesca);
                 }
 
-                try {
-                    Object sel = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-                    System.out.println("DEBUG: izabraniClanovi = " + sel);
-                    if (sel instanceof java.util.List) {
-                        java.util.List<?> tmp = (java.util.List<?>) sel;
-                        System.out.println("DEBUG: izabraniClanovi.size = " + tmp.size());
-                        for (Object o : tmp) {
-                            if (o instanceof domen.ClanDrustva) {
-                                domen.ClanDrustva c = (domen.ClanDrustva) o;
-                                System.out.println("DEBUG: clan id=" + c.getClanID() + " ime=" + c.getClanIme());
-                            } else {
-                                System.out.println("DEBUG: element klase " + o.getClass().getName() + " -> " + o);
-                            }
+                // pripremni debug i izabraniClanovi (moze da ostane pre try-a)
+                Object sel = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
+                System.out.println("DEBUG: izabraniClanovi = " + sel);
+                if (sel instanceof java.util.List) {
+                    java.util.List<?> tmp = (java.util.List<?>) sel;
+                    System.out.println("DEBUG: izabraniClanovi.size = " + tmp.size());
+                    for (Object o : tmp) {
+                        if (o instanceof domen.ClanDrustva) {
+                            domen.ClanDrustva c = (domen.ClanDrustva) o;
+                            System.out.println("DEBUG: clan id=" + c.getClanID() + " ime=" + c.getClanIme());
+                        } else {
+                            System.out.println("DEBUG: element klase " + o.getClass().getName() + " -> " + o);
                         }
-                    } else {
-                        System.out.println("DEBUG: izabraniClanovi nije List ili je null");
                     }
+                } else {
+                    System.out.println("DEBUG: izabraniClanovi nije List ili je null");
+                }
+
+                try {
                     komunikacija.Komunikacija.getInstanca().dodajAnsamblSaSastavom(a);
-                    JOptionPane.showMessageDialog(daf, "USPESNO DODAT ANSAMBL SA SASTAVOM", "USPEH", JOptionPane.INFORMATION_MESSAGE);
+                    // poruka po specifikaciji
+                    JOptionPane.showMessageDialog(daf, "Sistem je kreirao ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
                     daf.dispose();
+                    coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                 } catch (Exception ex) {
-                    String poruka = ex.getMessage() == null ? "Greska prilikom dodavanja ansambla" : ex.getMessage();
+                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
+                    String poruka = "Sistem ne moze da kreira ansambl";
+                    if (!razlog.isEmpty()) {
+                        poruka += "\nRazlog: " + razlog;
+                    }
                     JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
                 }
             }
