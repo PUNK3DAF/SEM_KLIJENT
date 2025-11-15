@@ -102,7 +102,11 @@ public class DodajClanController {
                     dcf.dispose();
                     coordinator.Coordinator.getInstanca().osveziClanFormu();
                 } catch (Exception ex) {
-                    String poruka = ex.getMessage() == null ? "Sistem ne moze da zapamti clana drustva" : ex.getMessage();
+                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
+                    String poruka = "Sistem ne moze da zapamti clana drustva";
+                    if (!razlog.isEmpty()) {
+                        poruka += "\nRazlog: " + razlog;
+                    }
                     JOptionPane.showMessageDialog(dcf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
                 }
             }
