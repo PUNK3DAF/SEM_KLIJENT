@@ -73,6 +73,21 @@ public class Komunikacija {
         return ansambli;
     }
 
+    public Ansambl ucitajAnsambl(int ansamblId) throws Exception {
+        Zahtev z = new Zahtev();
+        z.setOperacija(Operacije.UCITAJ_ANSAMBL);
+        Ansambl probe = new Ansambl();
+        probe.setAnsamblID(ansamblId);
+        z.setParametar(probe);
+        posiljalac.posalji(z);
+
+        Odgovor o = (Odgovor) primalac.primi();
+        if (o.getOdgovor() instanceof Exception) {
+            throw (Exception) o.getOdgovor();
+        }
+        return (Ansambl) o.getOdgovor();
+    }
+
     public void obrisiAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.OBRISI_ANSAMBL, a);
         posiljalac.posalji(z);
@@ -157,22 +172,22 @@ public class Komunikacija {
     }
 
     public void dodajClan(ClanDrustva c) throws Exception {
-    Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
-    posiljalac.posalji(z);
+        Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
+        posiljalac.posalji(z);
 
-    Odgovor odg = (Odgovor) primalac.primi();
-    if (odg.getOdgovor() == null) {
-        System.out.println("USPEH");
-    } else {
-        Exception serverEx;
-        if (odg.getOdgovor() instanceof Exception) {
-            serverEx = (Exception) odg.getOdgovor();
+        Odgovor odg = (Odgovor) primalac.primi();
+        if (odg.getOdgovor() == null) {
+            System.out.println("USPEH");
         } else {
-            serverEx = new Exception(String.valueOf(odg.getOdgovor()));
+            Exception serverEx;
+            if (odg.getOdgovor() instanceof Exception) {
+                serverEx = (Exception) odg.getOdgovor();
+            } else {
+                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
+            }
+            throw serverEx;
         }
-        throw serverEx;
     }
-}
 
     public void azurirajClan(ClanDrustva c) throws Exception {
         Zahtev z = new Zahtev(Operacije.AZURIRAJ_CLAN, c);
