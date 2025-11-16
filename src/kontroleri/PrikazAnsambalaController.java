@@ -32,7 +32,7 @@ public class PrikazAnsambalaController {
             public void actionPerformed(ActionEvent e) {
                 int red = paf.getjTableAnsambli().getSelectedRow();
                 if (red == -1) {
-                    JOptionPane.showMessageDialog(paf, "SISTEM NE MOZE DA AZURIRA ANSAMBL", "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "GRESKA", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 final ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
@@ -69,7 +69,7 @@ public class PrikazAnsambalaController {
             public void actionPerformed(ActionEvent e) {
                 int red = paf.getjTableAnsambli().getSelectedRow();
                 if (red == -1) {
-                    JOptionPane.showMessageDialog(paf, "SISTEM NE MOZE DA AZURIRA ANSAMBL", "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "GRESKA", JOptionPane.ERROR_MESSAGE);
                 } else {
                     final ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
                     final Ansambl sel = mta.getLista().get(red);
