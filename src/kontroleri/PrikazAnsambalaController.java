@@ -27,6 +27,7 @@ public class PrikazAnsambalaController {
     }
 
     private void addActionListeners() {
+
         paf.addBtnObrisiActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,6 +123,66 @@ public class PrikazAnsambalaController {
                             "Informacija",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+            }
+        });
+        paf.addBtnPrikaziActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int red = paf.getjTableAnsambli().getSelectedRow();
+                if (red == -1) {
+                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "Greska", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                final ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
+                final Ansambl sel = mta.getLista().get(red);
+
+                new javax.swing.SwingWorker<Ansambl, Void>() {
+                    @Override
+                    protected Ansambl doInBackground() throws Exception {
+                        return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(sel.getAnsamblID());
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            Ansambl full = get();
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("ID: ").append(full.getAnsamblID()).append("\n");
+                            sb.append("Ime: ").append(full.getImeAnsambla() == null ? "" : full.getImeAnsambla()).append("\n");
+                            sb.append("Opis: ").append(full.getOpisAnsambla() == null ? "" : full.getOpisAnsambla()).append("\n");
+                            if (full.getAdmin() != null) {
+                                String ai = full.getAdmin().getAdminIme();
+                                String au = full.getAdmin().getAdminUsername();
+                                sb.append("Administrator: ");
+                                boolean wrote = false;
+                                if (ai != null && !ai.isEmpty()) {
+                                    sb.append(ai);
+                                    wrote = true;
+                                }
+                                if (au != null && !au.isEmpty()) {
+                                    if (wrote) {
+                                        sb.append(" ");
+                                    }
+                                    sb.append("(").append(au).append(")");
+                                    wrote = true;
+                                }
+                                if (!wrote) {
+                                    sb.append("ID=").append(full.getAdmin().getAdminID());
+                                }
+                                sb.append("\n");
+                            }
+                            JOptionPane.showMessageDialog(paf, sb.toString() + "\n\nSistem je ucitao ansambl.", "Detalji ansambla", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
+                            Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
+                            String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
+                            String poruka = "Sistem ne moze da ucita ansambl";
+                            if (!razlog.isEmpty()) {
+                                poruka += "\nRazlog: " + razlog;
+                            }
+                            JOptionPane.showMessageDialog(paf, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }.execute();
             }
         });
     }

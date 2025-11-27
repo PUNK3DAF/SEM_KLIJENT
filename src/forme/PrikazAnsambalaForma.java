@@ -203,6 +203,10 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
         jButtonPretraga.addActionListener(actionListener);
     }
 
+    public void addBtnPrikaziActionListener(ActionListener actionListener) {
+        jButtonPretraga.addActionListener(actionListener);
+    }
+
     public JTextField getjTextFieldIme() {
         return jTextFieldIme;
     }
