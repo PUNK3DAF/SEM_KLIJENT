@@ -47,7 +47,7 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
         jButtonAzuriraj = new javax.swing.JButton();
         jButtonPrikazi = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTableClanovi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
