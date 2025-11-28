@@ -36,6 +36,22 @@ public class DodajAnsamblController {
                 String ime = daf.getjTextFieldImeAns().getText().trim();
                 String opis = daf.getjTextAreaOpisAns().getText().trim();
 
+                // client-side validation: ime i opis obavezni
+                if (ime.isEmpty() || opis.isEmpty()) {
+                    String poruka = "Sistem ne moze da kreira ansambl";
+                    String razlog = "";
+                    if (ime.isEmpty() && opis.isEmpty()) {
+                        razlog = "Ime i opis su obavezni";
+                    } else if (ime.isEmpty()) {
+                        razlog = "Ime ansambla je obavezno";
+                    } else {
+                        razlog = "Opis ansambla je obavezan";
+                    }
+                    poruka += "\nRazlog: " + razlog;
+                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
                 domen.Ansambl a = new domen.Ansambl(-1, ime, opis, admin);
 
@@ -44,7 +60,6 @@ public class DodajAnsamblController {
                     a.setUcesca(ucesca);
                 }
 
-                // pripremni debug i izabraniClanovi (moze da ostane pre try-a)
                 Object sel = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
                 System.out.println("DEBUG: izabraniClanovi = " + sel);
                 if (sel instanceof java.util.List) {
@@ -64,7 +79,6 @@ public class DodajAnsamblController {
 
                 try {
                     komunikacija.Komunikacija.getInstanca().dodajAnsamblSaSastavom(a);
-                    // poruka po specifikaciji
                     JOptionPane.showMessageDialog(daf, "Sistem je kreirao ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
                     daf.dispose();
                     coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
@@ -79,6 +93,7 @@ public class DodajAnsamblController {
             }
 
         });
+
         daf.AzurirajAddActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,6 +110,22 @@ public class DodajAnsamblController {
                     return;
                 }
 
+                // client-side validation: ime i opis obavezni for save
+                if (ime.isEmpty() || opis.isEmpty()) {
+                    String poruka = "Sistem ne moze da zapamti ansambl";
+                    String razlog = "";
+                    if (ime.isEmpty() && opis.isEmpty()) {
+                        razlog = "Ime i opis su obavezni";
+                    } else if (ime.isEmpty()) {
+                        razlog = "Ime ansambla je obavezno";
+                    } else {
+                        razlog = "Opis ansambla je obavezan";
+                    }
+                    poruka += "\nRazlog: " + razlog;
+                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 original.setImeAnsambla(ime);
                 original.setOpisAnsambla(opis);
 
@@ -102,22 +133,22 @@ public class DodajAnsamblController {
                 original.setUcesca(ucesca);
 
                 try {
-                    // send update to server (may throw Exception with server reason)
                     komunikacija.Komunikacija.getInstanca().azurirajSastavAnsambla(original);
-                    // success message per spec
                     JOptionPane.showMessageDialog(daf, "Sistem je zapamtio ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
                     daf.dispose();
                     coordinator.Coordinator.getInstanca().osveziFormu();
                 } catch (Exception ex) {
+                    String poruka = ex.getMessage() == null ? "Greska prilikom azuriranja ansambla" : ex.getMessage();
                     // show spec-styled error with server reason
                     String razlog = ex.getMessage() == null ? "" : ex.getMessage();
-                    String poruka = "Sistem ne moze da zapamti ansambl";
+                    String fullPoruka = "Sistem ne moze da zapamti ansambl";
                     if (!razlog.isEmpty()) {
-                        poruka += "\nRazlog: " + razlog;
+                        fullPoruka += "\nRazlog: " + razlog;
+                    } else {
+                        fullPoruka = poruka;
                     }
-                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(daf, fullPoruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
 
-                    // attempt to reload fresh ansambl from server and repopulate the form (like clan flow)
                     final domen.Ansambl savedOriginal = (domen.Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
                     if (savedOriginal != null && savedOriginal.getAnsamblID() > 0) {
                         new javax.swing.SwingWorker<domen.Ansambl, Void>() {
@@ -134,14 +165,12 @@ public class DodajAnsamblController {
                                         coordinator.Coordinator.getInstanca().dodajParam("Ansambl", fresh);
                                         daf.getjTextFieldImeAns().setText(fresh.getImeAnsambla() == null ? "" : fresh.getImeAnsambla());
                                         daf.getjTextAreaOpisAns().setText(fresh.getOpisAnsambla() == null ? "" : fresh.getOpisAnsambla());
-                                        // if you also track selected members in coordinator, consider repopulating that UI as well
                                     } else {
-                                        // ansambl no longer exists -> clear fields
                                         daf.getjTextFieldImeAns().setText("");
                                         daf.getjTextAreaOpisAns().setText("");
                                     }
                                 } catch (Exception ex2) {
-                                    // silent fail (optionally log)
+                                    // silent fail
                                 }
                             }
                         }.execute();
@@ -149,6 +178,7 @@ public class DodajAnsamblController {
                 }
             }
         });
+
         daf.UpravljajClanovimaAddActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
