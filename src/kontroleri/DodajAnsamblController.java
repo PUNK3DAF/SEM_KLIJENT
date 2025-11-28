@@ -102,32 +102,52 @@ public class DodajAnsamblController {
                 original.setUcesca(ucesca);
 
                 try {
-                    // DEBUG: proveri izabraniClanovi pre slanja
-                    Object sel = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-                    System.out.println("DEBUG: izabraniClanovi = " + sel);
-                    if (sel instanceof java.util.List) {
-                        java.util.List<?> tmp = (java.util.List<?>) sel;
-                        System.out.println("DEBUG: izabraniClanovi.size = " + tmp.size());
-                        for (Object o : tmp) {
-                            if (o instanceof domen.ClanDrustva) {
-                                domen.ClanDrustva c = (domen.ClanDrustva) o;
-                                System.out.println("DEBUG: clan id=" + c.getClanID() + " ime=" + c.getClanIme());
-                            } else {
-                                System.out.println("DEBUG: element klase " + o.getClass().getName() + " -> " + o);
-                            }
-                        }
-                    } else {
-                        System.out.println("DEBUG: izabraniClanovi nije List ili je null");
-                    }
+                    // send update to server (may throw Exception with server reason)
                     komunikacija.Komunikacija.getInstanca().azurirajSastavAnsambla(original);
-                    JOptionPane.showMessageDialog(daf, "USPESNO AZURIRAN ANSAMBL (sastav)", "USPEH", JOptionPane.INFORMATION_MESSAGE);
+                    // success message per spec
+                    JOptionPane.showMessageDialog(daf, "Sistem je zapamtio ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
                     daf.dispose();
+                    coordinator.Coordinator.getInstanca().osveziFormu();
                 } catch (Exception ex) {
-                    String poruka = ex.getMessage() == null ? "Greska prilikom azuriranja ansambla" : ex.getMessage();
+                    // show spec-styled error with server reason
+                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
+                    String poruka = "Sistem ne moze da zapamti ansambl";
+                    if (!razlog.isEmpty()) {
+                        poruka += "\nRazlog: " + razlog;
+                    }
                     JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
+
+                    // attempt to reload fresh ansambl from server and repopulate the form (like clan flow)
+                    final domen.Ansambl savedOriginal = (domen.Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
+                    if (savedOriginal != null && savedOriginal.getAnsamblID() > 0) {
+                        new javax.swing.SwingWorker<domen.Ansambl, Void>() {
+                            @Override
+                            protected domen.Ansambl doInBackground() throws Exception {
+                                return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(savedOriginal.getAnsamblID());
+                            }
+
+                            @Override
+                            protected void done() {
+                                try {
+                                    domen.Ansambl fresh = get();
+                                    if (fresh != null) {
+                                        coordinator.Coordinator.getInstanca().dodajParam("Ansambl", fresh);
+                                        daf.getjTextFieldImeAns().setText(fresh.getImeAnsambla() == null ? "" : fresh.getImeAnsambla());
+                                        daf.getjTextAreaOpisAns().setText(fresh.getOpisAnsambla() == null ? "" : fresh.getOpisAnsambla());
+                                        // if you also track selected members in coordinator, consider repopulating that UI as well
+                                    } else {
+                                        // ansambl no longer exists -> clear fields
+                                        daf.getjTextFieldImeAns().setText("");
+                                        daf.getjTextAreaOpisAns().setText("");
+                                    }
+                                } catch (Exception ex2) {
+                                    // silent fail (optionally log)
+                                }
+                            }
+                        }.execute();
+                    }
                 }
             }
-
         });
         daf.UpravljajClanovimaAddActionListener(new ActionListener() {
             @Override
