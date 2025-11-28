@@ -86,8 +86,9 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextFieldAdmin = new javax.swing.JTextField();
         jButtonPretraga = new javax.swing.JButton();
+        jButtonPrikazi = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTableAnsambli.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,6 +115,8 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
 
         jButtonPretraga.setText("PRETRAGA");
 
+        jButtonPrikazi.setText("PRIKAZI");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,9 +127,10 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jToggleButtonAzuriraj, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jToggleButtonAzuriraj, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                            .addComponent(jButtonObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonPrikazi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -164,6 +168,8 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
                         .addComponent(jButtonObrisi)
                         .addGap(40, 40, 40)
                         .addComponent(jToggleButtonAzuriraj)
+                        .addGap(34, 34, 34)
+                        .addComponent(jButtonPrikazi)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -180,6 +186,7 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonObrisi;
     private javax.swing.JButton jButtonPretraga;
+    private javax.swing.JButton jButtonPrikazi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -204,7 +211,7 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
     }
 
     public void addBtnPrikaziActionListener(ActionListener actionListener) {
-        jButtonPretraga.addActionListener(actionListener);
+        jButtonPrikazi.addActionListener(actionListener);
     }
 
     public JTextField getjTextFieldIme() {

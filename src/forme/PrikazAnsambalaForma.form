@@ -29,9 +29,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="766" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jButtonObrisi" min="-2" pref="81" max="-2" attributes="0"/>
-                          <Component id="jToggleButtonAzuriraj" min="-2" pref="94" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jToggleButtonAzuriraj" pref="94" max="32767" attributes="0"/>
+                          <Component id="jButtonObrisi" max="32767" attributes="0"/>
+                          <Component id="jButtonPrikazi" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -81,6 +82,8 @@
                       <Component id="jButtonObrisi" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                       <Component id="jToggleButtonAzuriraj" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="jButtonPrikazi" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -153,6 +156,11 @@
     <Component class="javax.swing.JButton" name="jButtonPretraga">
       <Properties>
         <Property name="text" type="java.lang.String" value="PRETRAGA"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonPrikazi">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="PRIKAZI"/>
       </Properties>
     </Component>
   </SubComponents>
