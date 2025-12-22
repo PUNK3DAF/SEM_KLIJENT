@@ -72,6 +72,7 @@ public class PrikazAnsambalaController {
                                         get();
                                         JOptionPane.showMessageDialog(paf, "Sistem je obrisao ansambl.", "Informacija", JOptionPane.INFORMATION_MESSAGE);
                                         PrikazAnsambalaController.this.osveziFormu();
+                                        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                                     } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
                                         Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
                                         String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
