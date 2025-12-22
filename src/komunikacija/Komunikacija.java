@@ -89,7 +89,7 @@ public class Komunikacija {
     }
 
     public void dodajAnsambl(Ansambl a) throws Exception {
-        Zahtev z = new Zahtev(Operacije.DODAJ_ANSAMBL, a);
+        Zahtev z = new Zahtev(Operacije.KREIRAJ_ANSAMBL, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -129,7 +129,7 @@ public class Komunikacija {
     }
 
     public void dodajClan(ClanDrustva c) throws Exception {
-        Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
+        Zahtev z = new Zahtev(Operacije.KREIRAJ_CLAN, c);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -159,7 +159,7 @@ public class Komunikacija {
     }
 
     public void dodajAnsamblSaSastavom(Ansambl a) throws Exception {
-        Zahtev z = new Zahtev(Operacije.DODAJ_ANSAMBL_SA_SASTAVOM, a);
+        Zahtev z = new Zahtev(Operacije.KREIRAJ_ANSAMBL_SA_SASTAVOM, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -207,6 +207,19 @@ public class Komunikacija {
             throw (Exception) o.getOdgovor();
         }
         return (ClanDrustva) o.getOdgovor();
+    }
+
+    public List<Ansambl> nadjiAnsambla(String vrednost) throws Exception {
+        Zahtev z = new Zahtev();
+        z.setOperacija(Operacije.NADJI_ANSAMBL);
+        z.setParametar(vrednost);
+        posiljalac.posalji(z);
+        Odgovor o = (Odgovor) primalac.primi();
+        
+        if (o.getOdgovor() instanceof Exception) {
+            throw (Exception) o.getOdgovor();
+        }
+        return (List<Ansambl>) o.getOdgovor();
     }
 
     private Exception unwrapException(Object response) {
