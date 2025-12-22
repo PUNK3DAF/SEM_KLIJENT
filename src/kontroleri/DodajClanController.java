@@ -1,20 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kontroleri;
 
 import domen.ClanDrustva;
 import forme.DodajClanForma;
 import forme.FormaMod;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
+import forme.UIHelper;
+import komunikacija.Konstante;
 
-/**
- *
- * @author vldmrk
- */
 public class DodajClanController {
 
     private final DodajClanForma dcf;
@@ -25,127 +16,107 @@ public class DodajClanController {
     }
 
     private void addActionListeners() {
-        dcf.addDodajActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dodaj(e);
-            }
+        dcf.addDodajActionListener(e -> handleDodaj());
+        dcf.addAzurirajActionListener(e -> handleAzuriraj());
+    }
 
-            private void dodaj(ActionEvent e) {
-                String ime = dcf.getjTextFieldIme().getText().trim();
-                String pol = dcf.getjTextFieldPol().getText().trim();
-                String godS = dcf.getjTextFieldGod().getText().trim();
-                String tel = dcf.getjTextFieldTel().getText().trim();
-                int god = 0;
-                try {
-                    if (!godS.isEmpty()) {
-                        god = Integer.parseInt(godS);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dcf, "Godine moraju biti broj", "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    private void handleDodaj() {
+        String ime = dcf.getjTextFieldIme().getText().trim();
+        String pol = dcf.getjTextFieldPol().getText().trim();
+        String godS = dcf.getjTextFieldGod().getText().trim();
+        String tel = dcf.getjTextFieldTel().getText().trim();
 
-                domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
-                ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, admin);
-                try {
-                    komunikacija.Komunikacija.getInstanca().dodajClan(c);
-                    JOptionPane.showMessageDialog(dcf, "Sistem je kreirao clana drustva", "USPEH", JOptionPane.INFORMATION_MESSAGE);
-                    dcf.dispose();
+        int god = parseGodine(godS);
+        if (god == -1) return;
 
-                    coordinator.Coordinator.getInstanca().osveziClanFormu();
-                } catch (Exception ex) {
-                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
-                    String poruka = "Sistem ne moze da kreira clana drustva";
-                    if (!razlog.isEmpty()) {
-                        poruka += "\nRazlog: " + razlog;
-                    }
-                    JOptionPane.showMessageDialog(dcf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+        domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
+        ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, admin);
+
+        try {
+            komunikacija.Komunikacija.getInstanca().dodajClan(c);
+            UIHelper.showInfo(dcf, Konstante.MEMBER_CREATED);
+            dcf.dispose();
+            coordinator.Coordinator.getInstanca().osveziClanFormu();
+        } catch (Exception ex) {
+            UIHelper.showError(dcf, Konstante.ERROR_CREATE_MEMBER, ex);
         }
-        );
+    }
 
-        dcf.addAzurirajActionListener(new ActionListener() {
+    private void handleAzuriraj() {
+        String ime = dcf.getjTextFieldIme().getText().trim();
+        String pol = dcf.getjTextFieldPol().getText().trim();
+        String godS = dcf.getjTextFieldGod().getText().trim();
+        String tel = dcf.getjTextFieldTel().getText().trim();
+
+        int god = parseGodine(godS);
+        if (god == -1) return;
+
+        ClanDrustva original = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
+        if (original == null) {
+            UIHelper.showError(dcf, Konstante.MEMBER_NOT_AVAILABLE);
+            return;
+        }
+
+        original.setClanIme(ime);
+        original.setClanPol(pol);
+        original.setClanGod(god);
+        original.setClanBrTel(tel);
+
+        try {
+            komunikacija.Komunikacija.getInstanca().azurirajClan(original);
+            UIHelper.showInfo(dcf, Konstante.MEMBER_SAVED);
+            dcf.dispose();
+            coordinator.Coordinator.getInstanca().osveziClanFormu();
+        } catch (Exception ex) {
+            UIHelper.showError(dcf, Konstante.ERROR_SAVE_MEMBER, ex);
+            refreshFormFromServer(original);
+        }
+    }
+
+    private int parseGodine(String godS) {
+        if (godS.isEmpty()) return 0;
+        try {
+            return Integer.parseInt(godS);
+        } catch (NumberFormatException ex) {
+            UIHelper.showError(dcf, Konstante.ERROR_YEARS_INVALID);
+            return -1;
+        }
+    }
+
+    private void refreshFormFromServer(ClanDrustva original) {
+        if (original == null || original.getClanID() <= 0) return;
+
+        new javax.swing.SwingWorker<ClanDrustva, Void>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                azuriraj(e);
+            protected ClanDrustva doInBackground() throws Exception {
+                return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(original.getClanID());
             }
 
-            private void azuriraj(ActionEvent e) {
-                String ime = dcf.getjTextFieldIme().getText().trim();
-                String pol = dcf.getjTextFieldPol().getText().trim();
-                String godS = dcf.getjTextFieldGod().getText().trim();
-                String tel = dcf.getjTextFieldTel().getText().trim();
-                int god = 0;
+            @Override
+            protected void done() {
                 try {
-                    if (!godS.isEmpty()) {
-                        god = Integer.parseInt(godS);
+                    ClanDrustva fresh = get();
+                    if (fresh != null) {
+                        coordinator.Coordinator.getInstanca().dodajParam("clan", fresh);
+                        dcf.getjTextFieldIme().setText(fresh.getClanIme() == null ? "" : fresh.getClanIme());
+                        dcf.getjTextFieldPol().setText(fresh.getClanPol() == null ? "" : fresh.getClanPol());
+                        dcf.getjTextFieldGod().setText(fresh.getClanGod() > 0 ? String.valueOf(fresh.getClanGod()) : "");
+                        dcf.getjTextFieldTel().setText(fresh.getClanBrTel() == null ? "" : fresh.getClanBrTel());
+                    } else {
+                        clearForm();
                     }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dcf, "Godine moraju biti broj", "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                ClanDrustva original = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
-                if (original == null) {
-                    JOptionPane.showMessageDialog(dcf, "Originalni clan nije dostupan za izmenu", "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                original.setClanIme(ime);
-                original.setClanPol(pol);
-                original.setClanGod(god);
-                original.setClanBrTel(tel);
-
-                try {
-                    komunikacija.Komunikacija.getInstanca().azurirajClan(original);
-                    JOptionPane.showMessageDialog(dcf, "Sistem je zapamtio clana drustva", "USPEH", JOptionPane.INFORMATION_MESSAGE);
-                    dcf.dispose();
-                    coordinator.Coordinator.getInstanca().osveziClanFormu();
                 } catch (Exception ex) {
-                    // prikaz po dokumentaciji (latinica bez dijakritika)
-                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
-                    String poruka = "Sistem ne moze da zapamti clana drustva";
-                    if (!razlog.isEmpty()) {
-                        poruka += "\nRazlog: " + razlog;
-                    }
-                    JOptionPane.showMessageDialog(dcf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-
-                    // pokusaj da osvezis formu sa vrednostima iz baze (vrati originalni objekat)
-                    final ClanDrustva savedOriginal = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
-                    if (savedOriginal != null && savedOriginal.getClanID() > 0) {
-                        new javax.swing.SwingWorker<ClanDrustva, Void>() {
-                            @Override
-                            protected ClanDrustva doInBackground() throws Exception {
-                                // poziv serveru izvrsiti u pozadini
-                                return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(savedOriginal.getClanID());
-                            }
-
-                            @Override
-                            protected void done() {
-                                try {
-                                    ClanDrustva fresh = get();
-                                    if (fresh != null) {
-                                        coordinator.Coordinator.getInstanca().dodajParam("clan", fresh);
-                                        dcf.getjTextFieldIme().setText(fresh.getClanIme() == null ? "" : fresh.getClanIme());
-                                        dcf.getjTextFieldPol().setText(fresh.getClanPol() == null ? "" : fresh.getClanPol());
-                                        dcf.getjTextFieldGod().setText(fresh.getClanGod() > 0 ? String.valueOf(fresh.getClanGod()) : "");
-                                        dcf.getjTextFieldTel().setText(fresh.getClanBrTel() == null ? "" : fresh.getClanBrTel());
-                                    } else {
-                                        // clan ne postoji u bazi -> isprazni polja
-                                        dcf.getjTextFieldIme().setText("");
-                                        dcf.getjTextFieldPol().setText("");
-                                        dcf.getjTextFieldGod().setText("");
-                                        dcf.getjTextFieldTel().setText("");
-                                    }
-                                } catch (Exception ex2) {
-                                    // tihi fail: ne radimo nista dodatno, mozemo logovati ako zelis
-                                }
-                            }
-                        }.execute();
-                    }
+                    // Silent fail
                 }
             }
-        });
+        }.execute();
+    }
+
+    private void clearForm() {
+        dcf.getjTextFieldIme().setText("");
+        dcf.getjTextFieldPol().setText("");
+        dcf.getjTextFieldGod().setText("");
+        dcf.getjTextFieldTel().setText("");
     }
 
     public void otvoriFormu(FormaMod fm) {

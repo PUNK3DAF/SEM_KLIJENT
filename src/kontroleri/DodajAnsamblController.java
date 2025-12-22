@@ -1,21 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kontroleri;
 
 import domen.Ansambl;
+import domen.ClanDrustva;
+import domen.Ucesce;
 import forme.DodajAnsamblForma;
 import forme.FormaMod;
-import java.awt.event.ActionEvent;
+import forme.UIHelper;
+import forme.UpravljajClanovimaForma;
+import komunikacija.Konstante;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
-/**
- *
- * @author vldmrk
- */
 public class DodajAnsamblController {
 
     private final DodajAnsamblForma daf;
@@ -26,185 +22,125 @@ public class DodajAnsamblController {
     }
 
     private void addActionListeners() {
-        daf.DodajAddActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dodaj(e);
-            }
-
-            private void dodaj(ActionEvent e) {
-                String ime = daf.getjTextFieldImeAns().getText().trim();
-                String opis = daf.getjTextAreaOpisAns().getText().trim();
-
-                // client-side validation: ime i opis obavezni
-                if (ime.isEmpty() || opis.isEmpty()) {
-                    String poruka = "Sistem ne moze da kreira ansambl";
-                    String razlog = "";
-                    if (ime.isEmpty() && opis.isEmpty()) {
-                        razlog = "Ime i opis su obavezni";
-                    } else if (ime.isEmpty()) {
-                        razlog = "Ime ansambla je obavezno";
-                    } else {
-                        razlog = "Opis ansambla je obavezan";
-                    }
-                    poruka += "\nRazlog: " + razlog;
-                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
-                domen.Ansambl a = new domen.Ansambl(-1, ime, opis, admin);
-
-                List<domen.Ucesce> ucesca = ucescaIzCoordinatora();
-                if (ucesca != null) {
-                    a.setUcesca(ucesca);
-                }
-
-                Object sel = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-                System.out.println("DEBUG: izabraniClanovi = " + sel);
-                if (sel instanceof java.util.List) {
-                    java.util.List<?> tmp = (java.util.List<?>) sel;
-                    System.out.println("DEBUG: izabraniClanovi.size = " + tmp.size());
-                    for (Object o : tmp) {
-                        if (o instanceof domen.ClanDrustva) {
-                            domen.ClanDrustva c = (domen.ClanDrustva) o;
-                            System.out.println("DEBUG: clan id=" + c.getClanID() + " ime=" + c.getClanIme());
-                        } else {
-                            System.out.println("DEBUG: element klase " + o.getClass().getName() + " -> " + o);
-                        }
-                    }
-                } else {
-                    System.out.println("DEBUG: izabraniClanovi nije List ili je null");
-                }
-
-                try {
-                    komunikacija.Komunikacija.getInstanca().dodajAnsamblSaSastavom(a);
-                    JOptionPane.showMessageDialog(daf, "Sistem je kreirao ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
-                    daf.dispose();
-                    coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
-                } catch (Exception ex) {
-                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
-                    String poruka = "Sistem ne moze da kreira ansambl";
-                    if (!razlog.isEmpty()) {
-                        poruka += "\nRazlog: " + razlog;
-                    }
-                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
-        });
-
-        daf.AzurirajAddActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                azuriraj(e);
-            }
-
-            private void azuriraj(ActionEvent e) {
-                String ime = daf.getjTextFieldImeAns().getText().trim();
-                String opis = daf.getjTextAreaOpisAns().getText().trim();
-
-                domen.Ansambl original = (domen.Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
-                if (original == null) {
-                    JOptionPane.showMessageDialog(daf, "Originalni ansambl nije dostupan", "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                // client-side validation: ime i opis obavezni for save
-                if (ime.isEmpty() || opis.isEmpty()) {
-                    String poruka = "Sistem ne moze da zapamti ansambl";
-                    String razlog = "";
-                    if (ime.isEmpty() && opis.isEmpty()) {
-                        razlog = "Ime i opis su obavezni";
-                    } else if (ime.isEmpty()) {
-                        razlog = "Ime ansambla je obavezno";
-                    } else {
-                        razlog = "Opis ansambla je obavezan";
-                    }
-                    poruka += "\nRazlog: " + razlog;
-                    JOptionPane.showMessageDialog(daf, poruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                original.setImeAnsambla(ime);
-                original.setOpisAnsambla(opis);
-
-                List<domen.Ucesce> ucesca = ucescaIzCoordinatora();
-                original.setUcesca(ucesca);
-
-                try {
-                    komunikacija.Komunikacija.getInstanca().azurirajSastavAnsambla(original);
-                    JOptionPane.showMessageDialog(daf, "Sistem je zapamtio ansambl", "USPEH", JOptionPane.INFORMATION_MESSAGE);
-                    daf.dispose();
-                    coordinator.Coordinator.getInstanca().osveziFormu();
-                } catch (Exception ex) {
-                    String poruka = ex.getMessage() == null ? "Greska prilikom azuriranja ansambla" : ex.getMessage();
-                    // show spec-styled error with server reason
-                    String razlog = ex.getMessage() == null ? "" : ex.getMessage();
-                    String fullPoruka = "Sistem ne moze da zapamti ansambl";
-                    if (!razlog.isEmpty()) {
-                        fullPoruka += "\nRazlog: " + razlog;
-                    } else {
-                        fullPoruka = poruka;
-                    }
-                    JOptionPane.showMessageDialog(daf, fullPoruka, "GRESKA", JOptionPane.ERROR_MESSAGE);
-
-                    final domen.Ansambl savedOriginal = (domen.Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
-                    if (savedOriginal != null && savedOriginal.getAnsamblID() > 0) {
-                        new javax.swing.SwingWorker<domen.Ansambl, Void>() {
-                            @Override
-                            protected domen.Ansambl doInBackground() throws Exception {
-                                return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(savedOriginal.getAnsamblID());
-                            }
-
-                            @Override
-                            protected void done() {
-                                try {
-                                    domen.Ansambl fresh = get();
-                                    if (fresh != null) {
-                                        coordinator.Coordinator.getInstanca().dodajParam("Ansambl", fresh);
-                                        daf.getjTextFieldImeAns().setText(fresh.getImeAnsambla() == null ? "" : fresh.getImeAnsambla());
-                                        daf.getjTextAreaOpisAns().setText(fresh.getOpisAnsambla() == null ? "" : fresh.getOpisAnsambla());
-                                    } else {
-                                        daf.getjTextFieldImeAns().setText("");
-                                        daf.getjTextAreaOpisAns().setText("");
-                                    }
-                                } catch (Exception ex2) {
-                                    // silent fail
-                                }
-                            }
-                        }.execute();
-                    }
-                }
-            }
-        });
-
-        daf.UpravljajClanovimaAddActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                forme.UpravljajClanovimaForma dlg = new forme.UpravljajClanovimaForma(daf, true);
-                new UpravljajClanovimaController(dlg).open();
-            }
-        });
+        daf.DodajAddActionListener(e -> handleDodaj());
+        daf.AzurirajAddActionListener(e -> handleAzuriraj());
+        daf.UpravljajClanovimaAddActionListener(e -> openMemberManager());
     }
 
-    private List<domen.Ucesce> ucescaIzCoordinatora() {
+    private void handleDodaj() {
+        String ime = daf.getjTextFieldImeAns().getText().trim();
+        String opis = daf.getjTextAreaOpisAns().getText().trim();
+
+        if (!validateInput(ime, opis)) return;
+
+        domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
+        Ansambl a = new Ansambl(-1, ime, opis, admin);
+        
+        List<Ucesce> ucesca = getUcescaFromCoordinator();
+        if (ucesca != null) {
+            a.setUcesca(ucesca);
+        }
+
+        try {
+            komunikacija.Komunikacija.getInstanca().dodajAnsamblSaSastavom(a);
+            UIHelper.showInfo(daf, Konstante.ENSEMBLE_CREATED);
+            daf.dispose();
+            coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
+        } catch (Exception ex) {
+            UIHelper.showError(daf, Konstante.ERROR_CREATE_ENSEMBLE, ex);
+        }
+    }
+
+    private void handleAzuriraj() {
+        String ime = daf.getjTextFieldImeAns().getText().trim();
+        String opis = daf.getjTextAreaOpisAns().getText().trim();
+
+        if (!validateInput(ime, opis)) return;
+
+        Ansambl original = (Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
+        if (original == null) {
+            UIHelper.showError(daf, Konstante.ERROR_LOAD_ENSEMBLE);
+            return;
+        }
+
+        original.setImeAnsambla(ime);
+        original.setOpisAnsambla(opis);
+        
+        List<Ucesce> ucesca = getUcescaFromCoordinator();
+        original.setUcesca(ucesca);
+
+        try {
+            komunikacija.Komunikacija.getInstanca().azurirajSastavAnsambla(original);
+            UIHelper.showInfo(daf, Konstante.ENSEMBLE_SAVED);
+            daf.dispose();
+            coordinator.Coordinator.getInstanca().osveziFormu();
+        } catch (Exception ex) {
+            UIHelper.showError(daf, Konstante.ERROR_SAVE_ENSEMBLE, ex);
+            refreshFormFromServer(original);
+        }
+    }
+
+    private boolean validateInput(String ime, String opis) {
+        if (!ime.isEmpty() && !opis.isEmpty()) return true;
+        
+        String reason = ime.isEmpty() && opis.isEmpty() 
+            ? Konstante.ERROR_REQUIRED_FIELDS
+            : ime.isEmpty() 
+                ? Konstante.ERROR_REQUIRED_NAME
+                : Konstante.ERROR_REQUIRED_DESCRIPTION;
+        
+        UIHelper.showError(daf, Konstante.ERROR_CREATE_ENSEMBLE + "\nRazlog: " + reason);
+        return false;
+    }
+
+    private List<Ucesce> getUcescaFromCoordinator() {
         Object obj = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-        if (obj == null) {
-            return null;
-        }
-        List<domen.ClanDrustva> selected = (List<domen.ClanDrustva>) obj;
-        if (selected.isEmpty()) {
-            return null;
-        }
-        List<domen.Ucesce> res = new java.util.ArrayList<>();
-        for (domen.ClanDrustva c : selected) {
-            domen.Ucesce u = new domen.Ucesce();
+        if (obj == null) return null;
+        
+        List<ClanDrustva> selected = (List<ClanDrustva>) obj;
+        if (selected.isEmpty()) return null;
+        
+        List<Ucesce> res = new ArrayList<>();
+        for (ClanDrustva c : selected) {
+            Ucesce u = new Ucesce();
             u.setClan(c);
             u.setUloga("Clan");
             res.add(u);
         }
         return res;
+    }
+
+    private void refreshFormFromServer(Ansambl original) {
+        if (original == null || original.getAnsamblID() <= 0) return;
+        
+        new javax.swing.SwingWorker<Ansambl, Void>() {
+            @Override
+            protected Ansambl doInBackground() throws Exception {
+                return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(original.getAnsamblID());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    Ansambl fresh = get();
+                    if (fresh != null) {
+                        coordinator.Coordinator.getInstanca().dodajParam("Ansambl", fresh);
+                        daf.getjTextFieldImeAns().setText(fresh.getImeAnsambla() == null ? "" : fresh.getImeAnsambla());
+                        daf.getjTextAreaOpisAns().setText(fresh.getOpisAnsambla() == null ? "" : fresh.getOpisAnsambla());
+                    } else {
+                        daf.getjTextFieldImeAns().setText("");
+                        daf.getjTextAreaOpisAns().setText("");
+                    }
+                } catch (Exception ex) {
+                    // Silent fail - user already saw error
+                }
+            }
+        }.execute();
+    }
+
+    private void openMemberManager() {
+        UpravljajClanovimaForma dlg = new UpravljajClanovimaForma(daf, true);
+        new UpravljajClanovimaController(dlg).open();
     }
 
     public void otvoriFormu(FormaMod fm) {
@@ -231,5 +167,4 @@ public class DodajAnsamblController {
                 throw new AssertionError();
         }
     }
-
 }

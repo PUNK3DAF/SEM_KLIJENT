@@ -12,14 +12,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author vldmrk
- */
 public class Komunikacija {
 
     private Socket soket;
@@ -64,13 +58,9 @@ public class Komunikacija {
 
     public List<Ansambl> ucitajAnsamble() {
         Zahtev z = new Zahtev(Operacije.UCITAJ_ANSAMBLE, null);
-        List<Ansambl> ansambli;
-
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        ansambli = (List<Ansambl>) odg.getOdgovor();
-        return ansambli;
+        return (List<Ansambl>) odg.getOdgovor();
     }
 
     public Ansambl ucitajAnsambl(int ansamblId) throws Exception {
@@ -91,169 +81,104 @@ public class Komunikacija {
     public void obrisiAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.OBRISI_ANSAMBL, a);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH");
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            String poruka = serverEx.getMessage() != null ? serverEx.getMessage() : String.valueOf(odg.getOdgovor());
-            JOptionPane.showMessageDialog(null, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
     }
 
-    public void dodajAnsambl(Ansambl a) {
+    public void dodajAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.DODAJ_ANSAMBL, a);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH");
-        } else {
-            System.out.println("GRESKA");
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
     }
 
     public void azurirajAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.AZURIRAJ_ANSAMBL, a);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH");
-            coordinator.Coordinator.getInstanca().osveziFormu();
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
+        coordinator.Coordinator.getInstanca().osveziFormu();
     }
 
     public List<ClanDrustva> ucitajClanove() {
         Zahtev z = new Zahtev(Operacije.UCITAJ_CLANOVE, null);
-        List<ClanDrustva> clanovi;
-
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        clanovi = (List<ClanDrustva>) odg.getOdgovor();
-        if (clanovi == null) {
-            return new ArrayList<>();
-        }
-        return clanovi;
+        
+        List<ClanDrustva> clanovi = (List<ClanDrustva>) odg.getOdgovor();
+        return clanovi == null ? new ArrayList<>() : clanovi;
     }
 
     public void obrisiClan(ClanDrustva c) throws Exception {
         Zahtev z = new Zahtev(Operacije.OBRISI_CLAN, c);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH");
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
     }
 
     public void dodajClan(ClanDrustva c) throws Exception {
         Zahtev z = new Zahtev(Operacije.DODAJ_CLAN, c);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH");
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
     }
 
     public void azurirajClan(ClanDrustva c) throws Exception {
         Zahtev z = new Zahtev(Operacije.AZURIRAJ_CLAN, c);
         posiljalac.posalji(z);
-
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH: clan azuriran");
-            coordinator.Coordinator.getInstanca().osveziClanFormu();
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
+        coordinator.Coordinator.getInstanca().osveziClanFormu();
     }
 
     public List<Ucesce> ucitajUcesca() {
         Zahtev z = new Zahtev(Operacije.UCITAJ_UCESCA, null);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
+        
         List<Ucesce> lista = (List<Ucesce>) odg.getOdgovor();
-        if (lista == null) {
-            return new ArrayList<>();
-        }
-        return lista;
+        return lista == null ? new ArrayList<>() : lista;
     }
 
     public void dodajAnsamblSaSastavom(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.DODAJ_ANSAMBL_SA_SASTAVOM, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH - ansambl dodat sa sastavom");
-            coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
+        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
     }
 
     public void azurirajSastavAnsambla(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.AZURIRAJ_SASTAV_ANSAMBLA, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
-        if (odg.getOdgovor() == null) {
-            System.out.println("USPEH - sastav ansambla azuriran");
-            coordinator.Coordinator.getInstanca().osveziFormu();
-            coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
-        } else {
-            Exception serverEx;
-            if (odg.getOdgovor() instanceof Exception) {
-                serverEx = (Exception) odg.getOdgovor();
-            } else {
-                serverEx = new Exception(String.valueOf(odg.getOdgovor()));
-            }
-            throw serverEx;
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
         }
+        coordinator.Coordinator.getInstanca().osveziFormu();
+        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
     }
 
     public List<ClanDrustva> nadjiClanaDrustva(String vrednost) throws Exception {
@@ -262,6 +187,7 @@ public class Komunikacija {
         z.setParametar(vrednost);
         posiljalac.posalji(z);
         Odgovor o = (Odgovor) primalac.primi();
+        
         if (o.getOdgovor() instanceof Exception) {
             throw (Exception) o.getOdgovor();
         }
@@ -276,10 +202,17 @@ public class Komunikacija {
         z.setParametar(probe);
         posiljalac.posalji(z);
         Odgovor o = (Odgovor) primalac.primi();
+        
         if (o.getOdgovor() instanceof Exception) {
             throw (Exception) o.getOdgovor();
         }
         return (ClanDrustva) o.getOdgovor();
     }
 
+    private Exception unwrapException(Object response) {
+        if (response instanceof Exception) {
+            return (Exception) response;
+        }
+        return new Exception(String.valueOf(response));
+    }
 }

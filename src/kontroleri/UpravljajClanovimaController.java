@@ -1,22 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kontroleri;
 
 import coordinator.Coordinator;
 import domen.ClanDrustva;
 import domen.Ucesce;
 import forme.UpravljajClanovimaForma;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author vldmrk
- */
 public class UpravljajClanovimaController {
 
     private final UpravljajClanovimaForma dlg;
@@ -75,35 +65,10 @@ public class UpravljajClanovimaController {
         dlg.setDostupni(available);
         dlg.setOdabrani(preSelected);
 
-        // wire buttons
-        dlg.getjButtonDodaj().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveSelected(dlg.getjListDostupni(), dlg.getjListOdabrani());
-            }
-        });
-
-        dlg.getjButtonObrisi().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moveSelected(dlg.getjListOdabrani(), dlg.getjListDostupni());
-            }
-        });
-
-        dlg.getjButtonSacuvaj().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<ClanDrustva> sel = dlg.odabraniLista();
-                Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
-                dlg.dispose();
-            }
-        });
-        dlg.getjButtonIzadji().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dlg.dispose();
-            }
-        });
+        dlg.getjButtonDodaj().addActionListener(e -> moveSelected(dlg.getjListDostupni(), dlg.getjListOdabrani()));
+        dlg.getjButtonObrisi().addActionListener(e -> moveSelected(dlg.getjListOdabrani(), dlg.getjListDostupni()));
+        dlg.getjButtonSacuvaj().addActionListener(e -> handleSacuvaj());
+        dlg.getjButtonIzadji().addActionListener(e -> dlg.dispose());
     }
 
     private void moveSelected(javax.swing.JList<ClanDrustva> from, javax.swing.JList<ClanDrustva> to) {
@@ -126,6 +91,12 @@ public class UpravljajClanovimaController {
         }
         from.clearSelection();
         to.clearSelection();
+    }
+
+    private void handleSacuvaj() {
+        List<ClanDrustva> sel = dlg.odabraniLista();
+        Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
+        dlg.dispose();
     }
 
     public void open() {

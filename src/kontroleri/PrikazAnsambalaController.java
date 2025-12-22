@@ -1,19 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kontroleri;
 
 import domen.Ansambl;
 import forme.PrikazAnsambalaForma;
+import forme.UIHelper;
 import forme.model.ModelTabeleAnsambl;
+import komunikacija.Konstante;
 import java.util.List;
-import javax.swing.JOptionPane;
 
-/**
- *
- * @author vldmrk
- */
 public class PrikazAnsambalaController {
 
     private final PrikazAnsambalaForma paf;
@@ -35,11 +28,8 @@ public class PrikazAnsambalaController {
         if (sel == null) return;
 
         ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
-            prikazi("Sistem je ucitao ansambl.");
-            if (JOptionPane.showConfirmDialog(paf, "Da li ste sigurni da zelite da obrisete ansambl?",
-                    "Potvrda brisanja", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
-                return;
-            }
+            UIHelper.showInfo(paf, Konstante.ENSEMBLE_LOADED);
+            if (UIHelper.confirm(paf, Konstante.CONFIRM_DELETE) != 0) return;
             brisiAnsamblUPozadini(full);
         });
     }
@@ -49,7 +39,7 @@ public class PrikazAnsambalaController {
         if (sel == null) return;
 
         ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
-            prikazi("Sistem je ucitao ansambl.");
+            UIHelper.showInfo(paf, Konstante.ENSEMBLE_LOADED);
             coordinator.Coordinator.getInstanca().dodajParam("Ansambl", full);
             coordinator.Coordinator.getInstanca().otvoriIzmeniAnsamblFormu();
         });
@@ -63,9 +53,9 @@ public class PrikazAnsambalaController {
         mta.pretrazi(ime, opis, admin);
 
         String poruka = mta.getLista() == null || mta.getLista().isEmpty()
-                ? "Sistem ne moze da nadje ansamble po zadatoj vrednosti."
-                : "Sistem je nasao ansamble po zadatoj vrednosti.";
-        prikazi(poruka);
+                ? Konstante.SEARCH_NOT_FOUND
+                : Konstante.SEARCH_FOUND;
+        UIHelper.showInfo(paf, poruka);
     }
 
     private void handlePrikaziAnsambl() {
@@ -74,14 +64,14 @@ public class PrikazAnsambalaController {
 
         ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
             String detalji = formatAnsambl(full);
-            prikazi(detalji + "\n\nSistem je ucitao ansambl.", "Detalji ansambla");
+            UIHelper.showInfo(paf, detalji + "\n\n" + Konstante.ENSEMBLE_LOADED, Konstante.TITLE_ENSEMBLE_DETAILS);
         });
     }
 
     private Ansambl getSelectedAnsambl() {
         int red = paf.getjTableAnsambli().getSelectedRow();
         if (red == -1) {
-            prikaziGresku("Sistem ne moze da ucita ansambl.");
+            UIHelper.showError(paf, Konstante.ENSEMBLE_NOT_SELECTED);
             return null;
         }
         ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
@@ -100,8 +90,7 @@ public class PrikazAnsambalaController {
                 try {
                     onSuccess.accept(get());
                 } catch (Exception ex) {
-                    String razlog = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
-                    prikaziGresku("Sistem ne moze da ucita ansambl", razlog);
+                    UIHelper.showError(paf, Konstante.ERROR_LOAD_ENSEMBLE, ex);
                 }
             }
         }.execute();
@@ -119,12 +108,11 @@ public class PrikazAnsambalaController {
             protected void done() {
                 try {
                     get();
-                    prikazi("Sistem je obrisao ansambl.");
+                    UIHelper.showInfo(paf, Konstante.ENSEMBLE_DELETED);
                     osveziFormu();
                     coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                 } catch (Exception ex) {
-                    String razlog = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
-                    prikaziGresku("Sistem ne moze da obrise ansambl", razlog);
+                    UIHelper.showError(paf, Konstante.ERROR_DELETE_ENSEMBLE, ex);
                 }
             }
         }.execute();

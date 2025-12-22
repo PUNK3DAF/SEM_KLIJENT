@@ -13,7 +13,6 @@ import forme.LoginForma;
 import forme.PrikazAnsambalaForma;
 import forme.PrikazClanovaForma;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import kontroleri.DodajAnsamblController;
 import kontroleri.DodajClanController;
@@ -93,8 +92,6 @@ public class Coordinator {
     public void osveziFormu() {
         if (paCont != null) {
             paCont.osveziFormu();
-        } else {
-            System.out.println("DBG: paCont == null, nema otvorene forme za ansamble za osvezenje.");
         }
     }
 
@@ -106,8 +103,6 @@ public class Coordinator {
     public void osveziClanFormu() {
         if (pcCont != null) {
             pcCont.osveziFormu();
-        } else {
-            System.out.println("DBG: pcCont == null, nema otvorene forme za clanove za osvezenje.");
         }
     }
 
@@ -124,8 +119,6 @@ public class Coordinator {
     public void osveziGlavnuFormu() {
         if (glavnaFormaCont != null) {
             glavnaFormaCont.osveziUcesceTabela();
-        } else {
-            System.out.println("DBG: glavnaFormaCont == null, nema otvorene glavne forme za osvezenje.");
         }
     }
 }

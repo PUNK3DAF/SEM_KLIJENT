@@ -1,21 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kontroleri;
 
 import domen.ClanDrustva;
 import forme.PrikazClanovaForma;
+import forme.UIHelper;
 import forme.model.ModelTabeleClan;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.SwingWorker;
 
-/**
- *
- * @author vldmrk
- */
 public class PrikazClanovaController {
 
     private final PrikazClanovaForma pcf;
@@ -26,160 +17,114 @@ public class PrikazClanovaController {
     }
 
     private void addActionListeners() {
-
-        pcf.addBtnObrisiActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = pcf.getjTableClanovi().getSelectedRow();
-                if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                final forme.model.ModelTabeleClan mtc = (forme.model.ModelTabeleClan) pcf.getjTableClanovi().getModel();
-                final domen.ClanDrustva c = mtc.getLista().get(red);
-
-                // 1) učitaj člana sa servera u pozadini
-                new SwingWorker<domen.ClanDrustva, Void>() {
-                    @Override
-                    protected domen.ClanDrustva doInBackground() throws Exception {
-                        return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            domen.ClanDrustva full = get();
-                            // 2) prikazujemo poruku da je učitan (korak 8)
-                            javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem je učitao člana društva.", "Informacija", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-                            // 3) potvrdimo da korisnik želi brisanje (optional confirm)
-                            int izbor = javax.swing.JOptionPane.showConfirmDialog(pcf, "Da li ste sigurni da želite da obrišete člana?", "Potvrda brisanja", javax.swing.JOptionPane.YES_NO_OPTION);
-                            if (izbor != javax.swing.JOptionPane.YES_OPTION) {
-                                return;
-                            }
-
-                            // 4) pozovemo brisanje (može baciti Exception ako server ne dozvoli)
-                            try {
-                                komunikacija.Komunikacija.getInstanca().obrisiClan(full);
-                                javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem je obrisao člana društva.", "Informacija", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                                pripremiFormu(); // osveži tabelu
-                            } catch (Exception ex) {
-                                javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne može da obriše člana društva.", "Greška", javax.swing.JOptionPane.ERROR_MESSAGE);
-                            }
-                        } catch (Exception ex) {
-                            // alternativni scenario 8.1
-                            javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne može da učita člana društva.", "Greška", javax.swing.JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }.execute();
-            }
-        });
-
-        pcf.addBtnAzurirajActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = pcf.getjTableClanovi().getSelectedRow();
-                if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                final forme.model.ModelTabeleClan mtc = (forme.model.ModelTabeleClan) pcf.getjTableClanovi().getModel();
-                final domen.ClanDrustva c = mtc.getLista().get(red);
-
-                new SwingWorker<domen.ClanDrustva, Void>() {
-                    @Override
-                    protected domen.ClanDrustva doInBackground() throws Exception {
-                        return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            domen.ClanDrustva full = get();
-                            boolean valid = full != null && full.getClanID() > 0
-                                    && full.getClanIme() != null && !full.getClanIme().trim().isEmpty();
-                            if (!valid) {
-                                javax.swing.JOptionPane.showMessageDialog(pcf,
-                                        "Sistem je ucitao clana, ali podaci nisu potpuni.",
-                                        "Greska",
-                                        javax.swing.JOptionPane.ERROR_MESSAGE);
-                                return;
-                            }
-
-                            javax.swing.JOptionPane.showMessageDialog(pcf,
-                                    "Sistem je ucitao clana drustva.",
-                                    "Informacija",
-                                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-                            coordinator.Coordinator.getInstanca().dodajParam("clan", full);
-                            coordinator.Coordinator.getInstanca().otvoriIzmeniClanFormu();
-
-                        } catch (Exception ex) {
-                            javax.swing.JOptionPane.showMessageDialog(pcf,
-                                    "Sistem ne moze da ucita clana drustva.",
-                                    "Greska",
-                                    javax.swing.JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }.execute();
-            }
-        });
-
-        pcf.addBtnPretragaActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String ime = pcf.getjTextFieldIme().getText().trim();
-                String pol = pcf.getjTextFieldPol().getText().trim();
-                String god = pcf.getjTextFieldGod().getText().trim();
-                String admin = pcf.getjTextFieldAdmin().getText().trim();
-                ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
-                mtc.pretrazi(ime, pol, god, admin);
-
-                if (mtc.getLista() == null || mtc.getLista().isEmpty()) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf,
-                            "Sistem ne moze da nadje clanove drustva po zadatoj vrednosti.",
-                            "Informacija",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(pcf,
-                            "Sistem je nasao clanove drustva po zadatoj vrednosti.",
-                            "Informacija",
-                            javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
-
-        pcf.addBtnPrikaziActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = pcf.getjTableClanovi().getSelectedRow();
-                if (red == -1) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf, "Sistem ne moze da ucita clana drustva.", "Greska", javax.swing.JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
-                domen.ClanDrustva c = mtc.getLista().get(red);
-                try {
-                    domen.ClanDrustva full = komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
-                    String info = format(full);
-                    javax.swing.JOptionPane.showMessageDialog(pcf,
-                            info + "\n\nSistem je ucitao clana drustva.",
-                            "Detalji clana",
-                            javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    javax.swing.JOptionPane.showMessageDialog(pcf,
-                            "Sistem ne moze da ucita clana drustva.",
-                            "Greska",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
+        pcf.addBtnObrisiActionListener(e -> handleObrisiClan());
+        pcf.addBtnAzurirajActionListener(e -> handleAzurirajClan());
+        pcf.addBtnPretragaActionListener(e -> handlePretraga());
+        pcf.addBtnPrikaziActionListener(e -> handlePrikazi());
     }
 
-    private String format(domen.ClanDrustva c) {
+    private void handleObrisiClan() {
+        int red = pcf.getjTableClanovi().getSelectedRow();
+        if (red == -1) {
+            UIHelper.showError(pcf, "Sistem ne moce da ucita clana drustva.");
+            return;
+        }
+        ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
+        ClanDrustva c = mtc.getLista().get(red);
+
+        new SwingWorker<ClanDrustva, Void>() {
+            @Override
+            protected ClanDrustva doInBackground() throws Exception {
+                return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    ClanDrustva full = get();
+                    UIHelper.showInfo(pcf, "Sistem je ucitao clana drustva.");
+                    if (UIHelper.confirm(pcf, "Da li ste sigurni da zelite da obrisete clana?") != 0) return;
+                    komunikacija.Komunikacija.getInstanca().obrisiClan(full);
+                    UIHelper.showInfo(pcf, "Sistem je obrisao clana drustva.");
+                    pripremiFormu();
+                } catch (Exception ex) {
+                    UIHelper.showError(pcf, "Sistem ne moze da obrise clana drustva.", ex);
+                }
+            }
+        }.execute();
+    }
+
+    private void handleAzurirajClan() {
+        int red = pcf.getjTableClanovi().getSelectedRow();
+        if (red == -1) {
+            UIHelper.showError(pcf, "Sistem ne moce da ucita clana drustva.");
+            return;
+        }
+        ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
+        ClanDrustva c = mtc.getLista().get(red);
+
+        new SwingWorker<ClanDrustva, Void>() {
+            @Override
+            protected ClanDrustva doInBackground() throws Exception {
+                return komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    ClanDrustva full = get();
+                    if (!isValid(full)) {
+                        UIHelper.showError(pcf, "Sistem je ucitao clana, ali podaci nisu potpuni.");
+                        return;
+                    }
+                    UIHelper.showInfo(pcf, "Sistem je ucitao clana drustva.");
+                    coordinator.Coordinator.getInstanca().dodajParam("clan", full);
+                    coordinator.Coordinator.getInstanca().otvoriIzmeniClanFormu();
+                } catch (Exception ex) {
+                    UIHelper.showError(pcf, "Sistem ne moze da ucita clana drustva.", ex);
+                }
+            }
+        }.execute();
+    }
+
+    private boolean isValid(ClanDrustva c) {
+        return c != null && c.getClanID() > 0 && c.getClanIme() != null && !c.getClanIme().trim().isEmpty();
+    }
+
+    private void handlePretraga() {
+        String ime = pcf.getjTextFieldIme().getText().trim();
+        String pol = pcf.getjTextFieldPol().getText().trim();
+        String god = pcf.getjTextFieldGod().getText().trim();
+        String admin = pcf.getjTextFieldAdmin().getText().trim();
+        ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
+        mtc.pretrazi(ime, pol, god, admin);
+
+        String msg = mtc.getLista() == null || mtc.getLista().isEmpty()
+                ? "Sistem ne moze da nadje clanove drustva po zadatoj vrednosti."
+                : "Sistem je nasao clanove drustva po zadatoj vrednosti.";
+        UIHelper.showInfo(pcf, msg);
+    }
+
+    private void handlePrikazi() {
+        int red = pcf.getjTableClanovi().getSelectedRow();
+        if (red == -1) {
+            UIHelper.showError(pcf, "Sistem ne moze da ucita clana drustva.");
+            return;
+        }
+        ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
+        ClanDrustva c = mtc.getLista().get(red);
+        try {
+            ClanDrustva full = komunikacija.Komunikacija.getInstanca().ucitajClanaDrustva(c.getClanID());
+            String info = format(full);
+            UIHelper.showInfo(pcf, info + "\n\nSistem je ucitao clana drustva.", "Detalji clana");
+        } catch (Exception ex) {
+            UIHelper.showError(pcf, "Sistem ne moze da ucita clana drustva.", ex);
+        }
+    }
+
+    private String format(ClanDrustva c) {
         if (c == null) {
-            return "Nema podataka o članu.";
+            return "Nema podataka o clanu.";
         }
         StringBuilder sb = new StringBuilder();
         sb.append("ID: ").append(c.getClanID()).append("\n");
@@ -201,9 +146,7 @@ public class PrikazClanovaController {
                 wrote = true;
             }
             if (adminUser != null && !adminUser.isEmpty()) {
-                if (wrote) {
-                    sb.append(" ");
-                }
+                if (wrote) sb.append(" ");
                 sb.append("(").append(adminUser).append(")");
                 wrote = true;
             }
@@ -232,5 +175,4 @@ public class PrikazClanovaController {
     public void osveziFormu() {
         pripremiFormu();
     }
-
 }
