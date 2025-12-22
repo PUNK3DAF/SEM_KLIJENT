@@ -7,9 +7,6 @@ package kontroleri;
 import domen.Ansambl;
 import forme.PrikazAnsambalaForma;
 import forme.model.ModelTabeleAnsambl;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -27,198 +24,154 @@ public class PrikazAnsambalaController {
     }
 
     private void addActionListeners() {
-        paf.addBtnObrisiActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = paf.getjTableAnsambli().getSelectedRow();
-                if (red == -1) {
-                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "Greska", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                final ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
-                final Ansambl sel = mta.getLista().get(red);
+        paf.addBtnObrisiActionListener(e -> handleObrisiAnsambl());
+        paf.addBtnAzurirajActionListener(e -> handleAzurirajAnsambl());
+        paf.addBtnPretragaActionListener(e -> handlePretraga());
+        paf.addBtnPrikaziActionListener(e -> handlePrikaziAnsambl());
+    }
 
-                new javax.swing.SwingWorker<Ansambl, Void>() {
-                    @Override
-                    protected Ansambl doInBackground() throws Exception {
-                        return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(sel.getAnsamblID());
-                    }
+    private void handleObrisiAnsambl() {
+        Ansambl sel = getSelectedAnsambl();
+        if (sel == null) return;
 
-                    @Override
-                    protected void done() {
-                        try {
-                            Ansambl full = get();
-                            JOptionPane.showMessageDialog(paf, "Sistem je ucitao ansambl.", "Informacija", JOptionPane.INFORMATION_MESSAGE);
-
-                            int izbor = JOptionPane.showConfirmDialog(paf,
-                                    "Da li ste sigurni da zelite da obrisete ansambl?",
-                                    "Potvrda brisanja",
-                                    JOptionPane.YES_NO_OPTION,
-                                    JOptionPane.QUESTION_MESSAGE);
-                            if (izbor != JOptionPane.YES_OPTION) {
-                                return;
-                            }
-
-                            new javax.swing.SwingWorker<Void, Void>() {
-                                @Override
-                                protected Void doInBackground() throws Exception {
-                                    komunikacija.Komunikacija.getInstanca().obrisiAnsambl(full);
-                                    return null;
-                                }
-
-                                @Override
-                                protected void done() {
-                                    try {
-                                        get();
-                                        JOptionPane.showMessageDialog(paf, "Sistem je obrisao ansambl.", "Informacija", JOptionPane.INFORMATION_MESSAGE);
-                                        PrikazAnsambalaController.this.osveziFormu();
-                                        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
-                                    } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
-                                        Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
-                                        String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
-                                        String poruka = "Sistem ne moze da obrise ansambl";
-                                        if (!razlog.isEmpty()) {
-                                            poruka += "\nRazlog: " + razlog;
-                                        }
-                                        JOptionPane.showMessageDialog(paf, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                }
-                            }.execute();
-
-                        } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
-                            Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
-                            String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
-                            String poruka = "Sistem ne moze da ucita ansambl";
-                            if (!razlog.isEmpty()) {
-                                poruka += "\nRazlog: " + razlog;
-                            }
-                            JOptionPane.showMessageDialog(paf, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }.execute();
+        ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
+            prikazi("Sistem je ucitao ansambl.");
+            if (JOptionPane.showConfirmDialog(paf, "Da li ste sigurni da zelite da obrisete ansambl?",
+                    "Potvrda brisanja", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                return;
             }
+            brisiAnsamblUPozadini(full);
         });
+    }
 
-        paf.addBtnAzurirajActionListener(new ActionListener() {
+    private void handleAzurirajAnsambl() {
+        Ansambl sel = getSelectedAnsambl();
+        if (sel == null) return;
+
+        ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
+            prikazi("Sistem je ucitao ansambl.");
+            coordinator.Coordinator.getInstanca().dodajParam("Ansambl", full);
+            coordinator.Coordinator.getInstanca().otvoriIzmeniAnsamblFormu();
+        });
+    }
+
+    private void handlePretraga() {
+        String ime = paf.getjTextFieldIme().getText().trim();
+        String opis = paf.getjTextFieldOpis().getText().trim();
+        String admin = paf.getjTextFieldAdmin().getText().trim();
+        ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
+        mta.pretrazi(ime, opis, admin);
+
+        String poruka = mta.getLista() == null || mta.getLista().isEmpty()
+                ? "Sistem ne moze da nadje ansamble po zadatoj vrednosti."
+                : "Sistem je nasao ansamble po zadatoj vrednosti.";
+        prikazi(poruka);
+    }
+
+    private void handlePrikaziAnsambl() {
+        Ansambl sel = getSelectedAnsambl();
+        if (sel == null) return;
+
+        ucitajAnsamblUPozadini(sel.getAnsamblID(), full -> {
+            String detalji = formatAnsambl(full);
+            prikazi(detalji + "\n\nSistem je ucitao ansambl.", "Detalji ansambla");
+        });
+    }
+
+    private Ansambl getSelectedAnsambl() {
+        int red = paf.getjTableAnsambli().getSelectedRow();
+        if (red == -1) {
+            prikaziGresku("Sistem ne moze da ucita ansambl.");
+            return null;
+        }
+        ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
+        return mta.getLista().get(red);
+    }
+
+    private void ucitajAnsamblUPozadini(int id, java.util.function.Consumer<Ansambl> onSuccess) {
+        new javax.swing.SwingWorker<Ansambl, Void>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = paf.getjTableAnsambli().getSelectedRow();
-                if (red == -1) {
-                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "Greska", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                final ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
-                final Ansambl sel = mta.getLista().get(red);
-
-                new javax.swing.SwingWorker<Ansambl, Void>() {
-                    @Override
-                    protected Ansambl doInBackground() throws Exception {
-                        return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(sel.getAnsamblID());
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            Ansambl full = get();
-                            JOptionPane.showMessageDialog(paf, "Sistem je ucitao ansambl.", "Informacija", JOptionPane.INFORMATION_MESSAGE);
-                            coordinator.Coordinator.getInstanca().dodajParam("Ansambl", full);
-                            coordinator.Coordinator.getInstanca().otvoriIzmeniAnsamblFormu();
-                        } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
-                            Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
-                            String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
-                            String poruka = "Sistem ne moze da ucita ansambl";
-                            if (!razlog.isEmpty()) {
-                                poruka += "\nRazlog: " + razlog;
-                            }
-                            JOptionPane.showMessageDialog(paf, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }.execute();
+            protected Ansambl doInBackground() throws Exception {
+                return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(id);
             }
-        });
 
-        paf.addBtnPretragaActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String ime = paf.getjTextFieldIme().getText().trim();
-                String opis = paf.getjTextFieldOpis().getText().trim();
-                String admin = paf.getjTextFieldAdmin().getText().trim();
-                ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
-                mta.pretrazi(ime, opis, admin);
-                if (mta.getLista() == null || mta.getLista().isEmpty()) {
-                    JOptionPane.showMessageDialog(paf,
-                            "Sistem ne moze da nadje ansamble po zadatoj vrednosti.",
-                            "Informacija",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(paf,
-                            "Sistem je nasao ansamble po zadatoj vrednosti.",
-                            "Informacija",
-                            JOptionPane.INFORMATION_MESSAGE);
+            protected void done() {
+                try {
+                    onSuccess.accept(get());
+                } catch (Exception ex) {
+                    String razlog = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+                    prikaziGresku("Sistem ne moze da ucita ansambl", razlog);
                 }
             }
-        });
+        }.execute();
+    }
 
-        paf.addBtnPrikaziActionListener(new ActionListener() {
+    private void brisiAnsamblUPozadini(Ansambl ansambl) {
+        new javax.swing.SwingWorker<Void, Void>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                int red = paf.getjTableAnsambli().getSelectedRow();
-                if (red == -1) {
-                    JOptionPane.showMessageDialog(paf, "Sistem ne moze da ucita ansambl.", "Greska", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
-                Ansambl c = mta.getLista().get(red);
-
-                new javax.swing.SwingWorker<Ansambl, Void>() {
-                    @Override
-                    protected Ansambl doInBackground() throws Exception {
-                        return komunikacija.Komunikacija.getInstanca().ucitajAnsambl(c.getAnsamblID());
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            Ansambl full = get();
-                            StringBuilder sb = new StringBuilder();
-                            sb.append("ID: ").append(full.getAnsamblID()).append("\n");
-                            sb.append("Ime: ").append(full.getImeAnsambla() == null ? "" : full.getImeAnsambla()).append("\n");
-                            sb.append("Opis: ").append(full.getOpisAnsambla() == null ? "" : full.getOpisAnsambla()).append("\n");
-                            if (full.getAdmin() != null) {
-                                String ai = full.getAdmin().getAdminIme();
-                                String au = full.getAdmin().getAdminUsername();
-                                sb.append("Administrator: ");
-                                boolean wrote = false;
-                                if (ai != null && !ai.isEmpty()) {
-                                    sb.append(ai);
-                                    wrote = true;
-                                }
-                                if (au != null && !au.isEmpty()) {
-                                    if (wrote) {
-                                        sb.append(" ");
-                                    }
-                                    sb.append("(").append(au).append(")");
-                                    wrote = true;
-                                }
-                                if (!wrote) {
-                                    sb.append("ID=").append(full.getAdmin().getAdminID());
-                                }
-                                sb.append("\n");
-                            }
-                            JOptionPane.showMessageDialog(paf, sb.toString() + "\n\nSistem je ucitao ansambl.", "Detalji ansambla", JOptionPane.INFORMATION_MESSAGE);
-                        } catch (InterruptedException | java.util.concurrent.ExecutionException ex) {
-                            Throwable cause = ex instanceof java.util.concurrent.ExecutionException ? ex.getCause() : ex;
-                            String razlog = cause == null || cause.getMessage() == null ? "" : cause.getMessage();
-                            String poruka = "Sistem ne moze da ucita ansambl";
-                            if (!razlog.isEmpty()) {
-                                poruka += "\nRazlog: " + razlog;
-                            }
-                            JOptionPane.showMessageDialog(paf, poruka, "Greska", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }.execute();
+            protected Void doInBackground() throws Exception {
+                komunikacija.Komunikacija.getInstanca().obrisiAnsambl(ansambl);
+                return null;
             }
-        });
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    prikazi("Sistem je obrisao ansambl.");
+                    osveziFormu();
+                    coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
+                } catch (Exception ex) {
+                    String razlog = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+                    prikaziGresku("Sistem ne moze da obrise ansambl", razlog);
+                }
+            }
+        }.execute();
+    }
+
+    private String formatAnsambl(Ansambl a) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(a.getAnsamblID()).append("\n");
+        sb.append("Ime: ").append(a.getImeAnsambla() == null ? "" : a.getImeAnsambla()).append("\n");
+        sb.append("Opis: ").append(a.getOpisAnsambla() == null ? "" : a.getOpisAnsambla()).append("\n");
+        if (a.getAdmin() != null) {
+            String ime = a.getAdmin().getAdminIme();
+            String user = a.getAdmin().getAdminUsername();
+            sb.append("Administrator: ");
+            if (ime != null && !ime.isEmpty()) {
+                sb.append(ime);
+                if (user != null && !user.isEmpty()) {
+                    sb.append(" (").append(user).append(")");
+                }
+            } else if (user != null && !user.isEmpty()) {
+                sb.append(user);
+            } else {
+                sb.append("ID=").append(a.getAdmin().getAdminID());
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private void prikazi(String poruka) {
+        prikazi(poruka, "Informacija");
+    }
+
+    private void prikazi(String poruka, String naslov) {
+        JOptionPane.showMessageDialog(paf, poruka, naslov, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void prikaziGresku(String poruka) {
+        prikaziGresku(poruka, null);
+    }
+
+    private void prikaziGresku(String poruka, String razlog) {
+        String full = poruka;
+        if (razlog != null && !razlog.isEmpty()) {
+            full += "\nRazlog: " + razlog;
+        }
+        JOptionPane.showMessageDialog(paf, full, "Greska", JOptionPane.ERROR_MESSAGE);
     }
 
     public void otvoriFormu() {
