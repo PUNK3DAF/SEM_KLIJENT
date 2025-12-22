@@ -147,7 +147,7 @@ public class PrikazAnsambalaController {
     }
 
     private void prikazi(String poruka, String naslov) {
-        JOptionPane.showMessageDialog(paf, poruka, naslov, JOptionPane.INFORMATION_MESSAGE);
+        UIHelper.showInfo(paf, poruka, naslov);
     }
 
     private void prikaziGresku(String poruka) {
@@ -159,7 +159,7 @@ public class PrikazAnsambalaController {
         if (razlog != null && !razlog.isEmpty()) {
             full += "\nRazlog: " + razlog;
         }
-        JOptionPane.showMessageDialog(paf, full, "Greska", JOptionPane.ERROR_MESSAGE);
+        UIHelper.showError(paf, full);
     }
 
     public void otvoriFormu() {
