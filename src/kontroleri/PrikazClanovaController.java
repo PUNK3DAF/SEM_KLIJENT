@@ -44,7 +44,7 @@ public class PrikazClanovaController {
                     ClanDrustva full = get();
                     UIHelper.showInfo(pcf, "Sistem je ucitao clana drustva.");
                     if (UIHelper.confirm(pcf, "Da li ste sigurni da zelite da obrisete clana?") != 0) return;
-                    komunikacija.Komunikacija.getInstanca().obrisiClan(full);
+                    komunikacija.Komunikacija.getInstanca().obrisiClanaDrustva(full);
                     UIHelper.showInfo(pcf, "Sistem je obrisao clana drustva.");
                     pripremiFormu();
                 } catch (Exception ex) {

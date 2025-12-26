@@ -42,7 +42,7 @@ public class DodajAnsamblController {
         }
 
         try {
-            komunikacija.Komunikacija.getInstanca().dodajAnsamblSaSastavom(a);
+            komunikacija.Komunikacija.getInstanca().kreirajAnsambl(a);
             UIHelper.showInfo(daf, Konstante.ENSEMBLE_CREATED);
             daf.dispose();
             coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
@@ -70,7 +70,7 @@ public class DodajAnsamblController {
         original.setUcesca(ucesca);
 
         try {
-            komunikacija.Komunikacija.getInstanca().azurirajSastavAnsambla(original);
+            komunikacija.Komunikacija.getInstanca().izmenaAnsambla(original);
             UIHelper.showInfo(daf, Konstante.ENSEMBLE_SAVED);
             daf.dispose();
             coordinator.Coordinator.getInstanca().osveziFormu();

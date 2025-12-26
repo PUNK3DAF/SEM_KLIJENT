@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 public class Komunikacija {
 
@@ -88,7 +87,7 @@ public class Komunikacija {
         }
     }
 
-    public void dodajAnsambl(Ansambl a) throws Exception {
+    public void kreirajAnsambl(Ansambl a) throws Exception {
         Zahtev z = new Zahtev(Operacije.KREIRAJ_ANSAMBL, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
@@ -96,10 +95,11 @@ public class Komunikacija {
         if (odg.getOdgovor() != null) {
             throw unwrapException(odg.getOdgovor());
         }
+        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
     }
 
-    public void azurirajAnsambl(Ansambl a) throws Exception {
-        Zahtev z = new Zahtev(Operacije.AZURIRAJ_ANSAMBL, a);
+    public void izmenaAnsambla(Ansambl a) throws Exception {
+        Zahtev z = new Zahtev(Operacije.IZMENA_ANSAMBLA, a);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -107,6 +107,7 @@ public class Komunikacija {
             throw unwrapException(odg.getOdgovor());
         }
         coordinator.Coordinator.getInstanca().osveziFormu();
+        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
     }
 
     public List<ClanDrustva> ucitajClanove() {
@@ -118,8 +119,8 @@ public class Komunikacija {
         return clanovi == null ? new ArrayList<>() : clanovi;
     }
 
-    public void obrisiClan(ClanDrustva c) throws Exception {
-        Zahtev z = new Zahtev(Operacije.OBRISI_CLAN, c);
+    public void obrisiClanaDrustva(ClanDrustva c) throws Exception {
+        Zahtev z = new Zahtev(Operacije.OBRISI_CLANA_DRUSTVA, c);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -128,8 +129,8 @@ public class Komunikacija {
         }
     }
 
-    public void dodajClan(ClanDrustva c) throws Exception {
-        Zahtev z = new Zahtev(Operacije.KREIRAJ_CLAN, c);
+    public void kreirajClanaDrustva(ClanDrustva c) throws Exception {
+        Zahtev z = new Zahtev(Operacije.KREIRAJ_CLANA_DRUSTVA, c);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -138,8 +139,8 @@ public class Komunikacija {
         }
     }
 
-    public void azurirajClan(ClanDrustva c) throws Exception {
-        Zahtev z = new Zahtev(Operacije.AZURIRAJ_CLAN, c);
+    public void izmeniClanaDrustva(ClanDrustva c) throws Exception {
+        Zahtev z = new Zahtev(Operacije.IZMENI_CLANA_DRUSTVA, c);
         posiljalac.posalji(z);
         Odgovor odg = (Odgovor) primalac.primi();
         
@@ -150,40 +151,14 @@ public class Komunikacija {
     }
 
     public List<Ucesce> ucitajUcesca() {
-        Zahtev z = new Zahtev(Operacije.UCITAJ_UCESCA, null);
-        posiljalac.posalji(z);
-        Odgovor odg = (Odgovor) primalac.primi();
-        
-        List<Ucesce> lista = (List<Ucesce>) odg.getOdgovor();
-        return lista == null ? new ArrayList<>() : lista;
-    }
-
-    public void dodajAnsamblSaSastavom(Ansambl a) throws Exception {
-        Zahtev z = new Zahtev(Operacije.KREIRAJ_ANSAMBL_SA_SASTAVOM, a);
-        posiljalac.posalji(z);
-        Odgovor odg = (Odgovor) primalac.primi();
-        
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
-    }
-
-    public void azurirajSastavAnsambla(Ansambl a) throws Exception {
-        Zahtev z = new Zahtev(Operacije.AZURIRAJ_SASTAV_ANSAMBLA, a);
-        posiljalac.posalji(z);
-        Odgovor odg = (Odgovor) primalac.primi();
-        
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-        coordinator.Coordinator.getInstanca().osveziFormu();
-        coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
+        // NAPOMENA: Operacija UCITAJ_UCESCA je uklonjena iz dokumentacije
+        // Vratiti praznu listu da ne bi pokvarilo postojeću funkcionalnost
+        return new ArrayList<>();
     }
 
     public List<ClanDrustva> nadjiClanaDrustva(String vrednost) throws Exception {
         Zahtev z = new Zahtev();
-        z.setOperacija(Operacije.NADJI_CLANOVE);
+        z.setOperacija(Operacije.NADJI_CLANA_DRUSTVA);
         z.setParametar(vrednost);
         posiljalac.posalji(z);
         Odgovor o = (Odgovor) primalac.primi();
@@ -196,7 +171,7 @@ public class Komunikacija {
 
     public ClanDrustva ucitajClanaDrustva(int clanId) throws Exception {
         Zahtev z = new Zahtev();
-        z.setOperacija(Operacije.UCITAJ_CLANA);
+        z.setOperacija(Operacije.UCITAJ_CLANA_DRUSTVA);
         ClanDrustva probe = new ClanDrustva();
         probe.setClanID(clanId);
         z.setParametar(probe);

@@ -33,7 +33,7 @@ public class DodajClanController {
         ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, admin);
 
         try {
-            komunikacija.Komunikacija.getInstanca().dodajClan(c);
+            komunikacija.Komunikacija.getInstanca().kreirajClanaDrustva(c);
             UIHelper.showInfo(dcf, Konstante.MEMBER_CREATED);
             dcf.dispose();
             coordinator.Coordinator.getInstanca().osveziClanFormu();
@@ -63,7 +63,7 @@ public class DodajClanController {
         original.setClanBrTel(tel);
 
         try {
-            komunikacija.Komunikacija.getInstanca().azurirajClan(original);
+            komunikacija.Komunikacija.getInstanca().izmeniClanaDrustva(original);
             UIHelper.showInfo(dcf, Konstante.MEMBER_SAVED);
             dcf.dispose();
             coordinator.Coordinator.getInstanca().osveziClanFormu();

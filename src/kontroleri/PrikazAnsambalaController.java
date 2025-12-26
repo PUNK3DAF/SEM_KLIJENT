@@ -142,26 +142,6 @@ public class PrikazAnsambalaController {
         return sb.toString();
     }
 
-    private void prikazi(String poruka) {
-        prikazi(poruka, "Informacija");
-    }
-
-    private void prikazi(String poruka, String naslov) {
-        UIHelper.showInfo(paf, poruka, naslov);
-    }
-
-    private void prikaziGresku(String poruka) {
-        prikaziGresku(poruka, null);
-    }
-
-    private void prikaziGresku(String poruka, String razlog) {
-        String full = poruka;
-        if (razlog != null && !razlog.isEmpty()) {
-            full += "\nRazlog: " + razlog;
-        }
-        UIHelper.showError(paf, full);
-    }
-
     public void otvoriFormu() {
         pripremiFormu();
         paf.setVisible(true);
