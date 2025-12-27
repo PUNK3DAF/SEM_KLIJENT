@@ -5,7 +5,6 @@
 package forme;
 
 import domen.ClanDrustva;
-import forme.model.ClanSaUlogom;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -19,37 +18,12 @@ import javax.swing.JButton;
  */
 public class UpravljajClanovimaForma extends javax.swing.JDialog {
 
-    private List<ClanSaUlogom> clanoviSaUlogom = new ArrayList<>();
-
     /**
      * Creates new form UpravljajClanovimaForma
      */
     public UpravljajClanovimaForma(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setupUlogaListener();
-    }
-
-    private void setupUlogaListener() {
-        jListOdabrani.addListSelectionListener(e -> {
-            int idx = jListOdabrani.getSelectedIndex();
-            if (idx >= 0 && idx < clanoviSaUlogom.size()) {
-                String uloga = clanoviSaUlogom.get(idx).getUloga();
-                showUlogaDialog(idx, clanoviSaUlogom.get(idx).getClan().getImeClan(), uloga);
-            }
-        });
-    }
-
-    private void showUlogaDialog(int index, String clanIme, String currentUloga) {
-        String novaUloga = javax.swing.JOptionPane.showInputDialog(
-            this,
-            "Unesite uloga za " + clanIme + ":",
-            currentUloga != null ? currentUloga : "Clan"
-        );
-        
-        if (novaUloga != null && !novaUloga.trim().isEmpty()) {
-            clanoviSaUlogom.get(index).setUloga(novaUloga.trim());
-        }
     }
 
     /**
@@ -153,14 +127,13 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSacuvajActionPerformed
-        /*
-                                // private List<ClanSaUlogom> clanoviSaUlogom = new ArrayList<>();
-*/
         java.util.List<domen.ClanDrustva> sel = odabraniLista();
         coordinator.Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
         this.dispose();
+    }//GEN-LAST:event_jButtonSacuvajActionPerformed
 
     public JButton getjButtonDodaj() {
+        return jButtonDodaj;
     }
 
     public void setjButtonIzadji(JButton jButtonIzadji) {
@@ -175,8 +148,12 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
         this.jButtonObrisi = jButtonObrisi;
     }
 
-                                    // this.clanoviSaUlogom = new ArrayList<>(stavke);
+    public JButton getjButtonSacuvaj() {
         return jButtonSacuvaj;
+    }
+
+    public JButton getjButtonIzadji() {
+        return jButtonIzadji;
     }
 
     public void setjButtonSacuvaj(JButton jButtonSacuvaj) {
@@ -186,7 +163,6 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
     public JList<ClanDrustva> getjListDostupni() {
         return jListDostupni;
     }
-                                    // return new ArrayList<>(clanoviSaUlogom);
     public void setjListDostupni(JList<ClanDrustva> jListDostupni) {
         this.jListDostupni = jListDostupni;
     }
@@ -244,20 +220,7 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
         return out;
     }
 
-    public void setOdabraniSaUlogom(List<ClanSaUlogom> stavke) {
-        this.clanoviSaUlogom = new ArrayList<>(stavke);
-        DefaultListModel<ClanDrustva> m = new DefaultListModel<>();
-        if (stavke != null) {
-            for (ClanSaUlogom cu : stavke) {
-                m.addElement(cu.getClan());
-            }
-        }
-        jListOdabrani.setModel(m);
-    }
-
-    public List<ClanSaUlogom> getClanoviSaUlogom() {
-        return new ArrayList<>(clanoviSaUlogom);
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDodaj;
