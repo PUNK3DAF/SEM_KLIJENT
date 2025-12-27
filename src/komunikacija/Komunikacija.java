@@ -151,9 +151,17 @@ public class Komunikacija {
     }
 
     public List<Ucesce> ucitajUcesca() {
-        // NAPOMENA: Operacija UCITAJ_UCESCA je uklonjena iz dokumentacije
-        // Vratiti praznu listu da ne bi pokvarilo postojeću funkcionalnost
-        return new ArrayList<>();
+        Zahtev z = new Zahtev(Operacije.UCITAJ_UCESCA, null);
+        posiljalac.posalji(z);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() instanceof Exception) {
+            // pomocna operacija: vrati prazno ako nije uspelo
+            return new ArrayList<>();
+        }
+
+        List<Ucesce> lista = (List<Ucesce>) odg.getOdgovor();
+        return lista == null ? new ArrayList<>() : lista;
     }
 
     public List<ClanDrustva> nadjiClanaDrustva(String vrednost) throws Exception {
