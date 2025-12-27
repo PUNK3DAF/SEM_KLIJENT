@@ -8,7 +8,6 @@ import forme.FormaMod;
 import forme.UIHelper;
 import forme.UpravljajClanovimaForma;
 import komunikacija.Konstante;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,17 +96,30 @@ public class DodajAnsamblController {
         Object obj = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
         if (obj == null) return null;
         
-        List<ClanDrustva> selected = (List<ClanDrustva>) obj;
-        if (selected.isEmpty()) return null;
-        
         List<Ucesce> res = new ArrayList<>();
-        for (ClanDrustva c : selected) {
-            Ucesce u = new Ucesce();
-            u.setClan(c);
-            u.setUloga("Clan");
-            res.add(u);
+        
+        // Proverite da li su ClanSaUlogom objekti
+        if (obj instanceof List) {
+            List<?> list = (List<?>) obj;
+            for (Object o : list) {
+                if (o instanceof forme.model.ClanSaUlogom) {
+                    forme.model.ClanSaUlogom cu = (forme.model.ClanSaUlogom) o;
+                    Ucesce u = new Ucesce();
+                    u.setClan(cu.getClan());
+                    u.setUloga(cu.getUloga() != null && !cu.getUloga().isEmpty() ? cu.getUloga() : "Clan");
+                    res.add(u);
+                } else if (o instanceof ClanDrustva) {
+                    // Kompatibilnost sa starim pristupom
+                    ClanDrustva c = (ClanDrustva) o;
+                    Ucesce u = new Ucesce();
+                    u.setClan(c);
+                    u.setUloga("Clan");
+                    res.add(u);
+                }
+            }
         }
-        return res;
+        
+        return res.isEmpty() ? null : res;
     }
 
     private void refreshFormFromServer(Ansambl original) {

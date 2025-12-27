@@ -4,12 +4,14 @@ import coordinator.Coordinator;
 import domen.ClanDrustva;
 import domen.Ucesce;
 import forme.UpravljajClanovimaForma;
+import forme.model.ClanSaUlogom;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UpravljajClanovimaController {
 
     private final UpravljajClanovimaForma dlg;
+    private List<ClanSaUlogom> clanoviSaUlogom;
 
     public UpravljajClanovimaController(UpravljajClanovimaForma dlg) {
         this.dlg = dlg;
@@ -25,14 +27,16 @@ public class UpravljajClanovimaController {
             ex.printStackTrace();
         }
 
-        // determine pre-selected items:
-        List<ClanDrustva> preSelected = new ArrayList<>();
+        // determine pre-selected items sa ulogama:
+        clanoviSaUlogom = new ArrayList<>();
         Object selObj = Coordinator.getInstanca().vratiParam("izabraniClanovi");
         if (selObj instanceof List) {
             List<?> tmp = (List<?>) selObj;
             for (Object o : tmp) {
-                if (o instanceof ClanDrustva) {
-                    preSelected.add((ClanDrustva) o);
+                if (o instanceof ClanSaUlogom) {
+                    clanoviSaUlogom.add((ClanSaUlogom) o);
+                } else if (o instanceof ClanDrustva) {
+                    clanoviSaUlogom.add(new ClanSaUlogom((ClanDrustva) o, "Clan"));
                 }
             }
         } else {
@@ -42,7 +46,7 @@ public class UpravljajClanovimaController {
                 if (ans.getUcesca() != null) {
                     for (Ucesce u : ans.getUcesca()) {
                         if (u.getClan() != null) {
-                            preSelected.add(u.getClan());
+                            clanoviSaUlogom.add(new ClanSaUlogom(u.getClan(), u.getUloga() != null ? u.getUloga() : "Clan"));
                         }
                     }
                 }
@@ -52,8 +56,8 @@ public class UpravljajClanovimaController {
         List<ClanDrustva> available = new ArrayList<>();
         for (ClanDrustva c : all) {
             boolean found = false;
-            for (ClanDrustva ps : preSelected) {
-                if (ps.getClanID() == c.getClanID()) {
+            for (ClanSaUlogom cu : clanoviSaUlogom) {
+                if (cu.getClan().getClanID() == c.getClanID()) {
                     found = true;
                     break;
                 }
@@ -63,7 +67,7 @@ public class UpravljajClanovimaController {
             }
         }
         dlg.setDostupni(available);
-        dlg.setOdabrani(preSelected);
+        dlg.setOdabraniSaUlogom(clanoviSaUlogom);
 
         dlg.getjButtonDodaj().addActionListener(e -> moveSelected(dlg.getjListDostupni(), dlg.getjListOdabrani()));
         dlg.getjButtonObrisi().addActionListener(e -> moveSelected(dlg.getjListOdabrani(), dlg.getjListDostupni()));
@@ -88,14 +92,27 @@ public class UpravljajClanovimaController {
                 }
             }
             tm.addElement(c);
+            
+            // Ako se dodaje u "odabrani", dodaj u clanoviSaUlogom sa default ulogom
+            if (to == dlg.getjListOdabrani()) {
+                clanoviSaUlogom.add(new ClanSaUlogom(c, "Clan"));
+            } else {
+                // Ako se briše iz "odabrani", ukloni iz clanoviSaUlogom
+                clanoviSaUlogom.removeIf(cu -> cu.getClan().getClanID() == c.getClanID());
+            }
         }
         from.clearSelection();
         to.clearSelection();
     }
 
     private void handleSacuvaj() {
-        List<ClanDrustva> sel = dlg.odabraniLista();
-        Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
+        // Uzmi uloge iz dijaloga ako postoji tabela
+        List<ClanSaUlogom> finalni = dlg.getClanoviSaUlogom();
+        if (finalni == null || finalni.isEmpty()) {
+            finalni = clanoviSaUlogom;
+        }
+        
+        Coordinator.getInstanca().dodajParam("izabraniClanovi", finalni);
         dlg.dispose();
     }
 

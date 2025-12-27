@@ -5,6 +5,8 @@
 package forme;
 
 import domen.ClanDrustva;
+import forme.model.ClanSaUlogom;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -17,12 +19,37 @@ import javax.swing.JButton;
  */
 public class UpravljajClanovimaForma extends javax.swing.JDialog {
 
+    private List<ClanSaUlogom> clanoviSaUlogom = new ArrayList<>();
+
     /**
      * Creates new form UpravljajClanovimaForma
      */
     public UpravljajClanovimaForma(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setupUlogaListener();
+    }
+
+    private void setupUlogaListener() {
+        jListOdabrani.addListSelectionListener(e -> {
+            int idx = jListOdabrani.getSelectedIndex();
+            if (idx >= 0 && idx < clanoviSaUlogom.size()) {
+                String uloga = clanoviSaUlogom.get(idx).getUloga();
+                showUlogaDialog(idx, clanoviSaUlogom.get(idx).getClan().getImeClan(), uloga);
+            }
+        });
+    }
+
+    private void showUlogaDialog(int index, String clanIme, String currentUloga) {
+        String novaUloga = javax.swing.JOptionPane.showInputDialog(
+            this,
+            "Unesite uloga za " + clanIme + ":",
+            currentUloga != null ? currentUloga : "Clan"
+        );
+        
+        if (novaUloga != null && !novaUloga.trim().isEmpty()) {
+            clanoviSaUlogom.get(index).setUloga(novaUloga.trim());
+        }
     }
 
     /**
@@ -226,6 +253,21 @@ dijalog.dispose();    }//GEN-LAST:event_jButtonSacuvajActionPerformed
             out.add(m.get(i));
         }
         return out;
+    }
+
+    public void setOdabraniSaUlogom(List<ClanSaUlogom> stavke) {
+        this.clanoviSaUlogom = new ArrayList<>(stavke);
+        DefaultListModel<ClanDrustva> m = new DefaultListModel<>();
+        if (stavke != null) {
+            for (ClanSaUlogom cu : stavke) {
+                m.addElement(cu.getClan());
+            }
+        }
+        jListOdabrani.setModel(m);
+    }
+
+    public List<ClanSaUlogom> getClanoviSaUlogom() {
+        return new ArrayList<>(clanoviSaUlogom);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
