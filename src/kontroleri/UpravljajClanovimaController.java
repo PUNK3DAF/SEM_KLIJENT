@@ -102,7 +102,7 @@ public class UpravljajClanovimaController {
             String init = "Clan";
             String entered = javax.swing.JOptionPane.showInputDialog(
                     dlg,
-                    "Unesite ulogu za clana (ID=" + c.getClanID() + "):",
+                "Unesite ulogu za clana " + c.getClanIme() + ":",
                     init
             );
             if (entered == null) entered = init;
