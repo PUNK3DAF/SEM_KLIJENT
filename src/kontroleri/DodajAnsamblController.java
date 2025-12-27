@@ -94,31 +94,29 @@ public class DodajAnsamblController {
 
     private List<Ucesce> getUcescaFromCoordinator() {
         Object obj = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-        if (obj == null) return null;
+        if (obj == null || !(obj instanceof java.util.List)) return null;
         
+        java.util.List<?> list = (java.util.List<?>) obj;
+        java.util.Map<Integer, String> uloge = new java.util.HashMap<>();
+        Object rolesObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
+        if (rolesObj instanceof java.util.Map) {
+            try {
+                uloge = (java.util.Map<Integer, String>) rolesObj;
+            } catch (Exception ignored) {}
+        }
+
         List<Ucesce> res = new ArrayList<>();
-        
-        // Proverite da li su ClanSaUlogom objekti
-        if (obj instanceof List) {
-            List<?> list = (List<?>) obj;
-            for (Object o : list) {
-                if (o instanceof forme.model.ClanSaUlogom) {
-                    forme.model.ClanSaUlogom cu = (forme.model.ClanSaUlogom) o;
-                    Ucesce u = new Ucesce();
-                    u.setClan(cu.getClan());
-                    u.setUloga(cu.getUloga() != null && !cu.getUloga().isEmpty() ? cu.getUloga() : "Clan");
-                    res.add(u);
-                } else if (o instanceof ClanDrustva) {
-                    // Kompatibilnost sa starim pristupom
-                    ClanDrustva c = (ClanDrustva) o;
-                    Ucesce u = new Ucesce();
-                    u.setClan(c);
-                    u.setUloga("Clan");
-                    res.add(u);
-                }
+        for (Object o : list) {
+            if (o instanceof ClanDrustva) {
+                ClanDrustva c = (ClanDrustva) o;
+                Ucesce u = new Ucesce();
+                u.setClan(c);
+                String role = uloge.getOrDefault(c.getClanID(), "Clan");
+                u.setUloga(role);
+                res.add(u);
             }
         }
-        
+
         return res.isEmpty() ? null : res;
     }
 

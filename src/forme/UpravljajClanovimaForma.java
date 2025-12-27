@@ -141,7 +141,6 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -155,23 +154,13 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
 
     private void jButtonSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSacuvajActionPerformed
         /*
-dijalog.dispose();    }//GEN-LAST:event_jButtonSacuvajActionPerformed
+                                // private List<ClanSaUlogom> clanoviSaUlogom = new ArrayList<>();
 */
         java.util.List<domen.ClanDrustva> sel = odabraniLista();
         coordinator.Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
         this.dispose();
-    }
 
     public JButton getjButtonDodaj() {
-        return jButtonDodaj;
-    }
-
-    public void setjButtonDodaj(JButton jButtonDodaj) {
-        this.jButtonDodaj = jButtonDodaj;
-    }
-
-    public JButton getjButtonIzadji() {
-        return jButtonIzadji;
     }
 
     public void setjButtonIzadji(JButton jButtonIzadji) {
@@ -186,7 +175,7 @@ dijalog.dispose();    }//GEN-LAST:event_jButtonSacuvajActionPerformed
         this.jButtonObrisi = jButtonObrisi;
     }
 
-    public JButton getjButtonSacuvaj() {
+                                    // this.clanoviSaUlogom = new ArrayList<>(stavke);
         return jButtonSacuvaj;
     }
 
@@ -197,7 +186,7 @@ dijalog.dispose();    }//GEN-LAST:event_jButtonSacuvajActionPerformed
     public JList<ClanDrustva> getjListDostupni() {
         return jListDostupni;
     }
-
+                                    // return new ArrayList<>(clanoviSaUlogom);
     public void setjListDostupni(JList<ClanDrustva> jListDostupni) {
         this.jListDostupni = jListDostupni;
     }

@@ -106,13 +106,24 @@ public class UpravljajClanovimaController {
     }
 
     private void handleSacuvaj() {
-        // Uzmi uloge iz dijaloga ako postoji tabela
-        List<ClanSaUlogom> finalni = dlg.getClanoviSaUlogom();
-        if (finalni == null || finalni.isEmpty()) {
-            finalni = clanoviSaUlogom;
+        // Jednostavan pristup: za svakog odabranog clana pitaj ulogu i sacuvaj u mapu
+        List<ClanDrustva> sel = dlg.odabraniLista();
+        java.util.Map<Integer, String> ulogeMap = new java.util.HashMap<>();
+        for (ClanDrustva c : sel) {
+            String init = "Clan";
+            String entered = javax.swing.JOptionPane.showInputDialog(
+                    dlg,
+                    "Unesite ulogu za clana (ID=" + c.getClanID() + "):",
+                    init
+            );
+            if (entered == null) entered = init;
+            entered = entered.trim();
+            if (entered.isEmpty()) entered = init;
+            ulogeMap.put(c.getClanID(), entered);
         }
-        
-        Coordinator.getInstanca().dodajParam("izabraniClanovi", finalni);
+
+        Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
+        Coordinator.getInstanca().dodajParam("ulogeClanova", ulogeMap);
         dlg.dispose();
     }
 
