@@ -32,6 +32,6 @@ public class ClanSaUlogom {
 
     @Override
     public String toString() {
-        return clan.getImeClan() + " (" + clan.getPrezime() + ")";
+        return String.valueOf(clan);
     }
 }

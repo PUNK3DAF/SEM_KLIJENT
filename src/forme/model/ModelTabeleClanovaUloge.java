@@ -37,9 +37,9 @@ public class ModelTabeleClanovaUloge extends AbstractTableModel {
         
         switch (columnIndex) {
             case 0:
-                return cu.getClan().getImeClan();
+                return String.valueOf(cu.getClan());
             case 1:
-                return cu.getClan().getPrezime();
+                return "";
             case 2:
                 return cu.getUloga();
             default:
