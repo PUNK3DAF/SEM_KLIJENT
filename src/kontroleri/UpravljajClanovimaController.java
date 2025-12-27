@@ -100,14 +100,29 @@ public class UpravljajClanovimaController {
         java.util.Map<Integer, String> ulogeMap = new java.util.HashMap<>();
         for (ClanDrustva c : sel) {
             String init = "Clan";
-            String entered = javax.swing.JOptionPane.showInputDialog(
-                    dlg,
-                "Unesite ulogu za clana " + c.getClanIme() + ":",
-                    init
-            );
-            if (entered == null) entered = init;
-            entered = entered.trim();
-            if (entered.isEmpty()) entered = init;
+            String entered;
+            while (true) {
+                entered = javax.swing.JOptionPane.showInputDialog(
+                        dlg,
+                        "Unesite ulogu za člana " + c.getClanIme() + ":",
+                        init
+                );
+                if (entered == null) { // korisnik kliknuo Cancel, zadrži default
+                    entered = init;
+                    break;
+                }
+                entered = entered.trim();
+                if (entered.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(
+                            dlg,
+                            "Uloga ne sme biti prazna.",
+                            "Greška",
+                            javax.swing.JOptionPane.ERROR_MESSAGE
+                    );
+                    continue; // ponovo pitaj
+                }
+                break; // validna uloga
+            }
             ulogeMap.put(c.getClanID(), entered);
         }
 
