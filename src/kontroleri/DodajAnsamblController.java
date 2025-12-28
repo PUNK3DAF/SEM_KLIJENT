@@ -30,7 +30,7 @@ public class DodajAnsamblController {
         String ime = daf.getjTextFieldImeAns().getText().trim();
         String opis = daf.getjTextAreaOpisAns().getText().trim();
 
-        if (!validateInput(ime, opis)) return;
+        if (!validateInput(ime, opis, Konstante.ERROR_CREATE_ENSEMBLE)) return;
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
         Ansambl a = new Ansambl(-1, ime, opis, admin);
@@ -54,7 +54,7 @@ public class DodajAnsamblController {
         String ime = daf.getjTextFieldImeAns().getText().trim();
         String opis = daf.getjTextAreaOpisAns().getText().trim();
 
-        if (!validateInput(ime, opis)) return;
+        if (!validateInput(ime, opis, Konstante.ERROR_SAVE_ENSEMBLE)) return;
 
         Ansambl original = (Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
         if (original == null) {
@@ -79,7 +79,7 @@ public class DodajAnsamblController {
         }
     }
 
-    private boolean validateInput(String ime, String opis) {
+    private boolean validateInput(String ime, String opis, String errorMessage) {
         if (!ime.isEmpty() && !opis.isEmpty()) return true;
         
         String reason = ime.isEmpty() && opis.isEmpty() 
@@ -88,7 +88,7 @@ public class DodajAnsamblController {
                 ? Konstante.ERROR_REQUIRED_NAME
                 : Konstante.ERROR_REQUIRED_DESCRIPTION;
         
-        UIHelper.showError(daf, Konstante.ERROR_CREATE_ENSEMBLE + "\nRazlog: " + reason);
+        UIHelper.showError(daf, errorMessage + "\nRazlog: " + reason);
         return false;
     }
 
