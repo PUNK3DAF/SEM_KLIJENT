@@ -26,7 +26,7 @@ public class PrikazClanovaController {
     private void handleObrisiClan() {
         int red = pcf.getjTableClanovi().getSelectedRow();
         if (red == -1) {
-            UIHelper.showError(pcf, "Sistem ne moce da ucita clana drustva.");
+            UIHelper.showError(pcf, "Sistem ne moze da obrise clana drustva.");
             return;
         }
         ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
