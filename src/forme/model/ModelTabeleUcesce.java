@@ -48,9 +48,15 @@ public class ModelTabeleUcesce extends AbstractTableModel {
         }
         switch (columnIndex) {
             case 0:
-                return (u.getAnsambl() == null) ? null : u.getAnsambl().getImeAnsambla();
+                if (u.getAnsambl() == null) return "";
+                String ansIme = u.getAnsambl().getImeAnsambla();
+                if (ansIme != null && !ansIme.isEmpty()) return ansIme;
+                return "(ID: " + u.getAnsambl().getAnsamblID() + ")";
             case 1:
-                return (u.getClan() == null) ? null : u.getClan().getClanIme();
+                if (u.getClan() == null) return "";
+                String clanIme = u.getClan().getClanIme();
+                if (clanIme != null && !clanIme.isEmpty()) return clanIme;
+                return "(ID: " + u.getClan().getClanID() + ")";
             case 2:
                 return u.getUloga();
             default:
