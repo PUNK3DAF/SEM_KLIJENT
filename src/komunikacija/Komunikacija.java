@@ -192,7 +192,7 @@ public class Komunikacija {
         return (ClanDrustva) o.getOdgovor();
     }
 
-    public List<Ansambl> nadjiAnsambla(String vrednost) throws Exception {
+    public List<Ansambl> nadjiAnsambl(String vrednost) throws Exception {
         Zahtev z = new Zahtev();
         z.setOperacija(Operacije.NADJI_ANSAMBL);
         z.setParametar(vrednost);
