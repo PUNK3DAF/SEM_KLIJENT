@@ -18,7 +18,6 @@ public class UpravljajClanovimaController {
     }
 
     private void init() {
-        // load all clanovi from server
         List<ClanDrustva> all = new ArrayList<>();
         try {
             all = komunikacija.Komunikacija.getInstanca().ucitajClanove();
@@ -26,7 +25,6 @@ public class UpravljajClanovimaController {
             ex.printStackTrace();
         }
 
-        // determine pre-selected items (members only; roles handled on save)
         preOdabrani = new ArrayList<>();
         Object selObj = Coordinator.getInstanca().vratiParam("izabraniClanovi");
         if (selObj instanceof List) {
@@ -95,7 +93,6 @@ public class UpravljajClanovimaController {
     }
 
     private void handleSacuvaj() {
-        // Jednostavan pristup: za svakog odabranog clana pitaj ulogu i sacuvaj u mapu
         List<ClanDrustva> sel = dlg.odabraniLista();
         java.util.Map<Integer, String> ulogeMap = new java.util.HashMap<>();
         for (ClanDrustva c : sel) {
@@ -107,7 +104,7 @@ public class UpravljajClanovimaController {
                         "Unesite ulogu za člana " + c.getClanIme() + ":",
                         init
                 );
-                if (entered == null) { // korisnik kliknuo Cancel, zadrži default
+                if (entered == null) {
                     entered = init;
                     break;
                 }

@@ -171,7 +171,6 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPrikaziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrikaziActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonPrikaziActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

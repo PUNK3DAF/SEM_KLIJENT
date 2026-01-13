@@ -30,11 +30,13 @@ public class DodajAnsamblController {
         String ime = daf.getjTextFieldImeAns().getText().trim();
         String opis = daf.getjTextAreaOpisAns().getText().trim();
 
-        if (!validateInput(ime, opis, Konstante.ERROR_CREATE_ENSEMBLE)) return;
+        if (!validateInput(ime, opis, Konstante.ERROR_CREATE_ENSEMBLE)) {
+            return;
+        }
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
         Ansambl a = new Ansambl(-1, ime, opis, admin);
-        
+
         List<Ucesce> ucesca = getUcescaFromCoordinator();
         if (ucesca != null) {
             a.setUcesca(ucesca);
@@ -54,7 +56,9 @@ public class DodajAnsamblController {
         String ime = daf.getjTextFieldImeAns().getText().trim();
         String opis = daf.getjTextAreaOpisAns().getText().trim();
 
-        if (!validateInput(ime, opis, Konstante.ERROR_SAVE_ENSEMBLE)) return;
+        if (!validateInput(ime, opis, Konstante.ERROR_SAVE_ENSEMBLE)) {
+            return;
+        }
 
         Ansambl original = (Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
         if (original == null) {
@@ -64,7 +68,7 @@ public class DodajAnsamblController {
 
         original.setImeAnsambla(ime);
         original.setOpisAnsambla(opis);
-        
+
         List<Ucesce> ucesca = getUcescaFromCoordinator();
         original.setUcesca(ucesca);
 
@@ -80,29 +84,34 @@ public class DodajAnsamblController {
     }
 
     private boolean validateInput(String ime, String opis, String errorMessage) {
-        if (!ime.isEmpty() && !opis.isEmpty()) return true;
-        
-        String reason = ime.isEmpty() && opis.isEmpty() 
-            ? Konstante.ERROR_REQUIRED_FIELDS
-            : ime.isEmpty() 
+        if (!ime.isEmpty() && !opis.isEmpty()) {
+            return true;
+        }
+
+        String reason = ime.isEmpty() && opis.isEmpty()
+                ? Konstante.ERROR_REQUIRED_FIELDS
+                : ime.isEmpty()
                 ? Konstante.ERROR_REQUIRED_NAME
                 : Konstante.ERROR_REQUIRED_DESCRIPTION;
-        
+
         UIHelper.showError(daf, errorMessage + "\nRazlog: " + reason);
         return false;
     }
 
     private List<Ucesce> getUcescaFromCoordinator() {
         Object obj = coordinator.Coordinator.getInstanca().vratiParam("izabraniClanovi");
-        if (obj == null || !(obj instanceof java.util.List)) return null;
-        
+        if (obj == null || !(obj instanceof java.util.List)) {
+            return null;
+        }
+
         java.util.List<?> list = (java.util.List<?>) obj;
         java.util.Map<Integer, String> uloge = new java.util.HashMap<>();
         Object rolesObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
         if (rolesObj instanceof java.util.Map) {
             try {
                 uloge = (java.util.Map<Integer, String>) rolesObj;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         List<Ucesce> res = new ArrayList<>();
@@ -121,8 +130,10 @@ public class DodajAnsamblController {
     }
 
     private void refreshFormFromServer(Ansambl original) {
-        if (original == null || original.getAnsamblID() <= 0) return;
-        
+        if (original == null || original.getAnsamblID() <= 0) {
+            return;
+        }
+
         new javax.swing.SwingWorker<Ansambl, Void>() {
             @Override
             protected Ansambl doInBackground() throws Exception {
@@ -142,7 +153,6 @@ public class DodajAnsamblController {
                         daf.getjTextAreaOpisAns().setText("");
                     }
                 } catch (Exception ex) {
-                    // Silent fail - user already saw error
                 }
             }
         }.execute();
