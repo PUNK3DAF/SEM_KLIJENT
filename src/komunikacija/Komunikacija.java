@@ -9,6 +9,7 @@ import domen.Ansambl;
 import domen.ClanDrustva;
 import domen.Ucesce;
 import domen.Zanr;
+import domen.Uloga;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -198,6 +199,45 @@ public class Komunikacija {
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
         
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void kreirajUlogu(Uloga u) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_ULOGA, u);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public List<Uloga> ucitajUloge() {
+        Zahtev z = new Zahtev(Operacije.UCITAJ_ULOGE, null);
+        posiljalac.posalji(z);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        List<Uloga> uloge = (List<Uloga>) odg.getOdgovor();
+        return uloge == null ? new ArrayList<>() : uloge;
+    }
+
+    public void izmeniUlogu(Uloga u) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ULOGA, u);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void obrisiUlogu(Uloga u) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ULOGA, u);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
         if (odg.getOdgovor() != null) {
             throw unwrapException(odg.getOdgovor());
         }

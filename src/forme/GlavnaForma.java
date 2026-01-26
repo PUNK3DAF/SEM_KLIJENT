@@ -31,7 +31,14 @@ public class GlavnaForma extends javax.swing.JFrame {
             coordinator.Coordinator.getInstanca().otvoriUpravljajZanrovimaFormu();
         });
         
+        javax.swing.JMenuItem jMenuItemUloge = new javax.swing.JMenuItem();
+        jMenuItemUloge.setText("Upravljaj ulogama");
+        jMenuItemUloge.addActionListener((java.awt.event.ActionEvent evt) -> {
+            coordinator.Coordinator.getInstanca().otvoriUpravljajUlogamaFormu();
+        });
+        
         jMenuSifarnici.add(jMenuItemZanrovi);
+        jMenuSifarnici.add(jMenuItemUloge);
         jMenuBar1.add(jMenuSifarnici);
     }
 

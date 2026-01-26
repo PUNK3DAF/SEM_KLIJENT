@@ -13,6 +13,7 @@ import forme.LoginForma;
 import forme.PrikazAnsambalaForma;
 import forme.PrikazClanovaForma;
 import forme.UpravljajZanrovimaForma;
+import forme.UpravljajUlogamaForma;
 import java.util.HashMap;
 import java.util.Map;
 import kontroleri.DodajAnsamblController;
@@ -22,6 +23,7 @@ import kontroleri.LoginController;
 import kontroleri.PrikazAnsambalaController;
 import kontroleri.PrikazClanovaController;
 import kontroleri.UpravljajZanrovimaController;
+import kontroleri.UpravljajUlogamaController;
 
 /**
  *
@@ -126,6 +128,11 @@ public class Coordinator {
 
     public void otvoriUpravljajZanrovimaFormu() {
         UpravljajZanrovimaController controller = new UpravljajZanrovimaController(new UpravljajZanrovimaForma(null, true));
+        controller.open();
+    }
+
+    public void otvoriUpravljajUlogamaFormu() {
+        UpravljajUlogamaController controller = new UpravljajUlogamaController(new UpravljajUlogamaForma(null, true));
         controller.open();
     }
 }
