@@ -98,27 +98,32 @@ public class UpravljajClanovimaController {
 
     private void handleSacuvaj() {
         List<ClanDrustva> sel = dlg.odabraniLista();
-        java.util.Map<Integer, String> ulogeMap = new java.util.HashMap<>();
+        java.util.Map<Integer, Integer> ulogeMap = new java.util.HashMap<>();
         for (ClanDrustva c : sel) {
-            String defaultVal = "Clan";
-            Object[] options;
-            if (uloge != null && !uloge.isEmpty()) {
-                options = uloge.stream().map(Uloga::getNaziv).toArray();
-                // ako ima prethodno izabrano, koristi ga
-                    Object prevObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
-                    if (prevObj instanceof java.util.Map) {
-                        java.util.Map<?, ?> map = (java.util.Map<?, ?>) prevObj;
-                        Object prev = map.get(c.getClanID());
-                        if (prev instanceof String) {
-                            defaultVal = (String) prev;
-                        }
-                    }
-            } else {
-                options = new Object[]{defaultVal};
+            if (uloge == null || uloge.isEmpty()) {
+                // nema šifarnika, fallback na ID 1
+                ulogeMap.put(c.getClanID(), 1);
+                continue;
             }
 
-            javax.swing.JComboBox<Object> combo = new javax.swing.JComboBox<>(options);
-            combo.setSelectedItem(defaultVal);
+            Uloga defaultU = uloge.get(0);
+            Object prevObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
+            if (prevObj instanceof java.util.Map) {
+                java.util.Map<?, ?> map = (java.util.Map<?, ?>) prevObj;
+                Object prev = map.get(c.getClanID());
+                if (prev instanceof Integer) {
+                    int prevId = (Integer) prev;
+                    for (Uloga u : uloge) {
+                        if (u.getUlogaID() == prevId) {
+                            defaultU = u;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            javax.swing.JComboBox<Uloga> combo = new javax.swing.JComboBox<>(uloge.toArray(new Uloga[0]));
+            combo.setSelectedItem(defaultU);
             int res = javax.swing.JOptionPane.showConfirmDialog(
                     dlg,
                     combo,
@@ -126,14 +131,14 @@ public class UpravljajClanovimaController {
                     javax.swing.JOptionPane.OK_CANCEL_OPTION,
                     javax.swing.JOptionPane.PLAIN_MESSAGE
             );
-            String chosen = defaultVal;
-            if (res == javax.swing.JOptionPane.OK_OPTION && combo.getSelectedItem() != null) {
-                chosen = combo.getSelectedItem().toString().trim();
+            Uloga chosenU = defaultU;
+            if (res == javax.swing.JOptionPane.OK_OPTION && combo.getSelectedItem() instanceof Uloga) {
+                chosenU = (Uloga) combo.getSelectedItem();
             }
-            if (chosen.isEmpty()) {
-                chosen = defaultVal;
+            if (chosenU == null) {
+                chosenU = defaultU;
             }
-            ulogeMap.put(c.getClanID(), chosen);
+            ulogeMap.put(c.getClanID(), chosenU.getUlogaID());
         }
 
         Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);

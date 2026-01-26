@@ -105,11 +105,11 @@ public class DodajAnsamblController {
         }
 
         java.util.List<?> list = (java.util.List<?>) obj;
-        java.util.Map<Integer, String> uloge = new java.util.HashMap<>();
+        java.util.Map<Integer, Integer> uloge = new java.util.HashMap<>();
         Object rolesObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
         if (rolesObj instanceof java.util.Map) {
             try {
-                uloge = (java.util.Map<Integer, String>) rolesObj;
+                uloge = (java.util.Map<Integer, Integer>) rolesObj;
             } catch (Exception ignored) {
             }
         }
@@ -120,8 +120,8 @@ public class DodajAnsamblController {
                 ClanDrustva c = (ClanDrustva) o;
                 Ucesce u = new Ucesce();
                 u.setClan(c);
-                String role = uloge.getOrDefault(c.getClanID(), "Clan");
-                u.setUloga(role);
+                Integer roleId = uloge.getOrDefault(c.getClanID(), 1);
+                u.setUloga(String.valueOf(roleId));
                 res.add(u);
             }
         }
