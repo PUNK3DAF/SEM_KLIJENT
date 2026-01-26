@@ -205,7 +205,7 @@ public class Komunikacija {
     }
 
     public void kreirajUlogu(Uloga u) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_ULOGA, u);
+        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_ULOGU, u);
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
 
@@ -224,7 +224,7 @@ public class Komunikacija {
     }
 
     public void izmeniUlogu(Uloga u) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ULOGA, u);
+        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ULOGU, u);
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
 
@@ -234,7 +234,7 @@ public class Komunikacija {
     }
 
     public void obrisiUlogu(Uloga u) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ULOGA, u);
+        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ULOGU, u);
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
 
