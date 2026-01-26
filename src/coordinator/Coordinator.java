@@ -136,10 +136,10 @@ public class Coordinator {
     public void otvoriUpravljajUlogamaFormu() {
         UpravljajUlogamaController controller = new UpravljajUlogamaController(new UpravljajUlogamaForma(null, true));
         controller.open();
+    }
 
     public void otvoriUpravljajMestimaFormu() {
         UpravljajMestimaForma forma = new UpravljajMestimaForma(null, true);
         forma.setVisible(true);
-    }
     }
 }
