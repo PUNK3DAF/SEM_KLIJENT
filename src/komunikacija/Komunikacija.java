@@ -7,6 +7,7 @@ package komunikacija;
 import domen.Administrator;
 import domen.Ansambl;
 import domen.ClanDrustva;
+import domen.Mesto;
 import domen.Ucesce;
 import domen.Zanr;
 import domen.Uloga;
@@ -235,6 +236,45 @@ public class Komunikacija {
 
     public void obrisiUlogu(Uloga u) throws Exception {
         Zahtev zahtev = new Zahtev(Operacije.OBRISI_ULOGU, u);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void kreirajMesto(Mesto m) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_MESTO, m);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public List<Mesto> ucitajMesta() {
+        Zahtev z = new Zahtev(Operacije.UCITAJ_MESTA, null);
+        posiljalac.posalji(z);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        List<Mesto> mesta = (List<Mesto>) odg.getOdgovor();
+        return mesta == null ? new ArrayList<>() : mesta;
+    }
+
+    public void izmeniMesto(Mesto m) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.IZMENI_MESTO, m);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void obrisiMesto(Mesto m) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.OBRISI_MESTO, m);
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
 

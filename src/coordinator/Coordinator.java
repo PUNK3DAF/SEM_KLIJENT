@@ -14,6 +14,7 @@ import forme.PrikazAnsambalaForma;
 import forme.PrikazClanovaForma;
 import forme.UpravljajZanrovimaForma;
 import forme.UpravljajUlogamaForma;
+import forme.UpravljajMestimaForma;
 import java.util.HashMap;
 import java.util.Map;
 import kontroleri.DodajAnsamblController;
@@ -24,6 +25,7 @@ import kontroleri.PrikazAnsambalaController;
 import kontroleri.PrikazClanovaController;
 import kontroleri.UpravljajZanrovimaController;
 import kontroleri.UpravljajUlogamaController;
+import kontroleri.UpravljajMestimaController;
 
 /**
  *
@@ -134,5 +136,10 @@ public class Coordinator {
     public void otvoriUpravljajUlogamaFormu() {
         UpravljajUlogamaController controller = new UpravljajUlogamaController(new UpravljajUlogamaForma(null, true));
         controller.open();
+
+    public void otvoriUpravljajMestimaFormu() {
+        UpravljajMestimaForma forma = new UpravljajMestimaForma(null, true);
+        forma.setVisible(true);
+    }
     }
 }
