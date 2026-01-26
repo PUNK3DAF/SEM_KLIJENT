@@ -65,7 +65,7 @@ public class UpravljajZanrovimaController {
             return;
         }
         
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite novi naziv žanra:", "Izmeni žanr", JOptionPane.PLAIN_MESSAGE);
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite novi naziv žanra:", z.getNaziv());
         if (naziv == null || naziv.trim().isEmpty()) {
             JOptionPane.showMessageDialog(forma, "Naziv žanra ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
             return;

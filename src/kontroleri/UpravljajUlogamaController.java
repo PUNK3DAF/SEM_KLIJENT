@@ -65,7 +65,7 @@ public class UpravljajUlogamaController {
             return;
         }
 
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite novi naziv uloge:", "Izmeni ulogu", JOptionPane.PLAIN_MESSAGE);
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite novi naziv uloge:", u.getNaziv());
         if (naziv == null || naziv.trim().isEmpty()) {
             JOptionPane.showMessageDialog(forma, "Naziv uloge ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
             return;
