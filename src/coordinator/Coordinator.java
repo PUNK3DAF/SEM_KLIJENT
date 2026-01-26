@@ -12,6 +12,7 @@ import forme.GlavnaForma;
 import forme.LoginForma;
 import forme.PrikazAnsambalaForma;
 import forme.PrikazClanovaForma;
+import forme.UpravljajZanrovimaForma;
 import java.util.HashMap;
 import java.util.Map;
 import kontroleri.DodajAnsamblController;
@@ -20,6 +21,7 @@ import kontroleri.GlavnaFormaController;
 import kontroleri.LoginController;
 import kontroleri.PrikazAnsambalaController;
 import kontroleri.PrikazClanovaController;
+import kontroleri.UpravljajZanrovimaController;
 
 /**
  *
@@ -120,5 +122,10 @@ public class Coordinator {
         if (glavnaFormaCont != null) {
             glavnaFormaCont.osveziUcesceTabela();
         }
+    }
+
+    public void otvoriUpravljajZanrovimaFormu() {
+        UpravljajZanrovimaController controller = new UpravljajZanrovimaController(new UpravljajZanrovimaForma(null, true));
+        controller.open();
     }
 }

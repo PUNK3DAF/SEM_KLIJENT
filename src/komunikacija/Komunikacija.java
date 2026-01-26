@@ -8,6 +8,7 @@ import domen.Administrator;
 import domen.Ansambl;
 import domen.ClanDrustva;
 import domen.Ucesce;
+import domen.Zanr;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -156,12 +157,50 @@ public class Komunikacija {
         Odgovor odg = (Odgovor) primalac.primi();
 
         if (odg.getOdgovor() instanceof Exception) {
-            // pomocna operacija: vrati prazno ako nije uspelo
             return new ArrayList<>();
         }
 
         List<Ucesce> lista = (List<Ucesce>) odg.getOdgovor();
         return lista == null ? new ArrayList<>() : lista;
+    }
+
+    public void kreirajZanr(Zanr z) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_ZANR, z);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public List<Zanr> ucitajZanrove() {
+        Zahtev z = new Zahtev(Operacije.UCITAJ_ZANROVE, null);
+        posiljalac.posalji(z);
+        Odgovor odg = (Odgovor) primalac.primi();
+        
+        List<Zanr> zanrovi = (List<Zanr>) odg.getOdgovor();
+        return zanrovi == null ? new ArrayList<>() : zanrovi;
+    }
+
+    public void izmeniZanr(Zanr z) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ZANR, z);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void obrisiZanr(Zanr z) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ZANR, z);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+        
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
     }
 
     public List<ClanDrustva> nadjiClanaDrustva(String vrednost) throws Exception {
