@@ -3,6 +3,7 @@ package kontroleri;
 import coordinator.Coordinator;
 import domen.ClanDrustva;
 import domen.Ucesce;
+import domen.Uloga;
 import forme.UpravljajClanovimaForma;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ public class UpravljajClanovimaController {
 
     private final UpravljajClanovimaForma dlg;
     private List<ClanDrustva> preOdabrani;
+    private List<Uloga> uloge;
 
     public UpravljajClanovimaController(UpravljajClanovimaForma dlg) {
         this.dlg = dlg;
@@ -19,8 +21,10 @@ public class UpravljajClanovimaController {
 
     private void init() {
         List<ClanDrustva> all = new ArrayList<>();
+        uloge = new ArrayList<>();
         try {
             all = komunikacija.Komunikacija.getInstanca().ucitajClanove();
+            uloge = komunikacija.Komunikacija.getInstanca().ucitajUloge();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -96,31 +100,40 @@ public class UpravljajClanovimaController {
         List<ClanDrustva> sel = dlg.odabraniLista();
         java.util.Map<Integer, String> ulogeMap = new java.util.HashMap<>();
         for (ClanDrustva c : sel) {
-            String init = "Clan";
-            String entered;
-            while (true) {
-                entered = javax.swing.JOptionPane.showInputDialog(
-                        dlg,
-                        "Unesite ulogu za člana " + c.getClanIme() + ":",
-                        init
-                );
-                if (entered == null) {
-                    entered = init;
-                    break;
-                }
-                entered = entered.trim();
-                if (entered.isEmpty()) {
-                    javax.swing.JOptionPane.showMessageDialog(
-                            dlg,
-                            "Uloga ne sme biti prazna.",
-                            "Greška",
-                            javax.swing.JOptionPane.ERROR_MESSAGE
-                    );
-                    continue; // ponovo pitaj
-                }
-                break; // validna uloga
+            String defaultVal = "Clan";
+            Object[] options;
+            if (uloge != null && !uloge.isEmpty()) {
+                options = uloge.stream().map(Uloga::getNaziv).toArray();
+                // ako ima prethodno izabrano, koristi ga
+                    Object prevObj = coordinator.Coordinator.getInstanca().vratiParam("ulogeClanova");
+                    if (prevObj instanceof java.util.Map) {
+                        java.util.Map<?, ?> map = (java.util.Map<?, ?>) prevObj;
+                        Object prev = map.get(c.getClanID());
+                        if (prev instanceof String) {
+                            defaultVal = (String) prev;
+                        }
+                    }
+            } else {
+                options = new Object[]{defaultVal};
             }
-            ulogeMap.put(c.getClanID(), entered);
+
+            javax.swing.JComboBox<Object> combo = new javax.swing.JComboBox<>(options);
+            combo.setSelectedItem(defaultVal);
+            int res = javax.swing.JOptionPane.showConfirmDialog(
+                    dlg,
+                    combo,
+                    "Odaberite ulogu za člana " + c.getClanIme(),
+                    javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                    javax.swing.JOptionPane.PLAIN_MESSAGE
+            );
+            String chosen = defaultVal;
+            if (res == javax.swing.JOptionPane.OK_OPTION && combo.getSelectedItem() != null) {
+                chosen = combo.getSelectedItem().toString().trim();
+            }
+            if (chosen.isEmpty()) {
+                chosen = defaultVal;
+            }
+            ulogeMap.put(c.getClanID(), chosen);
         }
 
         Coordinator.getInstanca().dodajParam("izabraniClanovi", sel);
