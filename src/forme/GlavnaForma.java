@@ -47,6 +47,18 @@ public class GlavnaForma extends javax.swing.JFrame {
         jMenuSifarnici.add(jMenuItemUloge);
         jMenuSifarnici.add(jMenuItemMesta);
         jMenuBar1.add(jMenuSifarnici);
+        
+        javax.swing.JMenu jMenuDogadjaji = new javax.swing.JMenu();
+        jMenuDogadjaji.setText("Događaji");
+        
+        javax.swing.JMenuItem jMenuItemDogadjajPrikaz = new javax.swing.JMenuItem();
+        jMenuItemDogadjajPrikaz.setText("Upravljaj događajima");
+        jMenuItemDogadjajPrikaz.addActionListener((java.awt.event.ActionEvent evt) -> {
+            coordinator.Coordinator.getInstanca().otvoriPrikazDogadjajFormu();
+        });
+        
+        jMenuDogadjaji.add(jMenuItemDogadjajPrikaz);
+        jMenuBar1.add(jMenuDogadjaji);
     }
 
     public JLabel getjLabelUlogovani() {

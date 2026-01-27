@@ -7,6 +7,7 @@ package komunikacija;
 import domen.Administrator;
 import domen.Ansambl;
 import domen.ClanDrustva;
+import domen.Dogadjaj;
 import domen.Mesto;
 import domen.Ucesce;
 import domen.Zanr;
@@ -275,6 +276,45 @@ public class Komunikacija {
 
     public void obrisiMesto(Mesto m) throws Exception {
         Zahtev zahtev = new Zahtev(Operacije.OBRISI_MESTO, m);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void kreirajDogadjaj(Dogadjaj d) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_DOGADJAJ, d);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public List<Dogadjaj> ucitajDogadjaje() {
+        Zahtev z = new Zahtev(Operacije.UCITAJ_DOGADJAJE, null);
+        posiljalac.posalji(z);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        List<Dogadjaj> dogadjaji = (List<Dogadjaj>) odg.getOdgovor();
+        return dogadjaji == null ? new ArrayList<>() : dogadjaji;
+    }
+
+    public void izmeniDogadjaj(Dogadjaj d) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.IZMENI_DOGADJAJ, d);
+        posiljalac.posalji(zahtev);
+        Odgovor odg = (Odgovor) primalac.primi();
+
+        if (odg.getOdgovor() != null) {
+            throw unwrapException(odg.getOdgovor());
+        }
+    }
+
+    public void obrisiDogadjaj(Dogadjaj d) throws Exception {
+        Zahtev zahtev = new Zahtev(Operacije.OBRISI_DOGADJAJ, d);
         posiljalac.posalji(zahtev);
         Odgovor odg = (Odgovor) primalac.primi();
 
