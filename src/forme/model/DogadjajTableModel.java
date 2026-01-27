@@ -46,7 +46,10 @@ public class DogadjajTableModel extends AbstractTableModel {
             case 2:
                 return d.getDatum();
             case 3:
-                return d.getMesto() != null ? d.getMesto().getNaziv() : "N/A";
+                if (d.getMesto() != null) {
+                    return d.getMesto().getNaziv();
+                }
+                return "Mesto #" + d.getMestoID();
             default:
                 return "N/A";
         }

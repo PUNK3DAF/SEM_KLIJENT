@@ -110,6 +110,7 @@ public class UpravljajDogadjajController {
             Dogadjaj dogadjaj = new Dogadjaj();
             dogadjaj.setNaziv(naziv.trim());
             dogadjaj.setDatum(datum);
+            dogadjaj.setMestoID(izbrano.getMestoID());
             dogadjaj.setMesto(izbrano);
 
             Komunikacija.getInstanca().kreirajDogadjaj(dogadjaj);
@@ -177,6 +178,7 @@ public class UpravljajDogadjajController {
 
             dogadjaj.setNaziv(naziv.trim());
             dogadjaj.setDatum(datum);
+            dogadjaj.setMestoID(izbrano.getMestoID());
             dogadjaj.setMesto(izbrano);
 
             Komunikacija.getInstanca().izmeniDogadjaj(dogadjaj);
