@@ -142,6 +142,12 @@ public class UpravljajDogadjajController {
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
         Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv događaja:", dogadjaj.getNaziv());
+        if (naziv == null || naziv.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         // Create date picker
         JPanel datumPanel = new JPanel();
         datumPanel.add(new JLabel("Izaberite datum:"));
@@ -161,13 +167,7 @@ public class UpravljajDogadjajController {
         }
 
         java.util.Date selectedDate = (java.util.Date) datumSpinner.getValue();
-        java.time.LocalDate datum = selectedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();ocalDate datum;
-        try {
-            datum = LocalDate.parse(datumStr.trim());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Nevažeći format datuma!", "Greška", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        java.time.LocalDate datum = selectedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
