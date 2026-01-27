@@ -11,10 +11,15 @@ import forme.model.DogadjajTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 import komunikacija.Komunikacija;
 
 /**
@@ -69,19 +74,25 @@ public class UpravljajDogadjajController {
             return;
         }
 
-        String datumStr = JOptionPane.showInputDialog(forma, "Unesite datum (yyyy-MM-dd):");
-        if (datumStr == null || datumStr.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Datum je obavezan!", "Greška", JOptionPane.ERROR_MESSAGE);
+        // Create date picker
+        JPanel datumPanel = new JPanel();
+        datumPanel.add(new JLabel("Izaberite datum:"));
+        
+        Calendar cal = Calendar.getInstance();
+        SpinnerDateModel dateModel = new SpinnerDateModel(cal.getTime(), null, null, Calendar.DAY_OF_MONTH);
+        JSpinner datumSpinner = new JSpinner(dateModel);
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(datumSpinner, "yyyy-MM-dd");
+        datumSpinner.setEditor(editor);
+        datumPanel.add(datumSpinner);
+        
+        int datumResult = JOptionPane.showConfirmDialog(forma, datumPanel, "Izaberite datum",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (datumResult != JOptionPane.OK_OPTION) {
             return;
         }
 
-        LocalDate datum;
-        try {
-            datum = LocalDate.parse(datumStr.trim());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Nevažeći format datuma!", "Greška", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        java.util.Date selectedDate = (java.util.Date) datumSpinner.getValue();
+        java.time.LocalDate datum = selectedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
 
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
@@ -131,19 +142,26 @@ public class UpravljajDogadjajController {
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
         Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv događaja:", dogadjaj.getNaziv());
-        if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+        // Create date picker
+        JPanel datumPanel = new JPanel();
+        datumPanel.add(new JLabel("Izaberite datum:"));
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(java.sql.Date.valueOf(dogadjaj.getDatum()));
+        SpinnerDateModel dateModel = new SpinnerDateModel(cal.getTime(), null, null, Calendar.DAY_OF_MONTH);
+        JSpinner datumSpinner = new JSpinner(dateModel);
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(datumSpinner, "yyyy-MM-dd");
+        datumSpinner.setEditor(editor);
+        datumPanel.add(datumSpinner);
+        
+        int datumResult = JOptionPane.showConfirmDialog(forma, datumPanel, "Izaberite datum",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (datumResult != JOptionPane.OK_OPTION) {
             return;
         }
 
-        String datumStr = JOptionPane.showInputDialog(forma, "Unesite datum (yyyy-MM-dd):", dogadjaj.getDatum().toString());
-        if (datumStr == null || datumStr.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Datum je obavezan!", "Greška", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        LocalDate datum;
+        java.util.Date selectedDate = (java.util.Date) datumSpinner.getValue();
+        java.time.LocalDate datum = selectedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();ocalDate datum;
         try {
             datum = LocalDate.parse(datumStr.trim());
         } catch (Exception ex) {
