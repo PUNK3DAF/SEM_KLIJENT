@@ -148,7 +148,6 @@ public class UpravljajDogadjajController {
             return;
         }
 
-        // Create date picker
         JPanel datumPanel = new JPanel();
         datumPanel.add(new JLabel("Izaberite datum:"));
         
