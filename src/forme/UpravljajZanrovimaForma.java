@@ -20,8 +20,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableZanrovi = new javax.swing.JTable();
         jButtonDodaj = new javax.swing.JButton();
-        jButtonIzmeni = new javax.swing.JButton();
-        jButtonObrisi = new javax.swing.JButton();
         jButtonZatvori = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -31,10 +29,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTableZanrovi);
 
         jButtonDodaj.setText("Dodaj");
-
-        jButtonIzmeni.setText("Izmeni");
-
-        jButtonObrisi.setText("Obriši");
 
         jButtonZatvori.setText("Zatvori");
 
@@ -48,10 +42,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonDodaj)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonIzmeni)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonObrisi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonZatvori)))
                 .addContainerGap())
@@ -64,8 +54,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonDodaj)
-                    .addComponent(jButtonIzmeni)
-                    .addComponent(jButtonObrisi)
                     .addComponent(jButtonZatvori))
                 .addContainerGap())
         );
@@ -91,14 +79,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
         return jButtonDodaj;
     }
 
-    public JButton getjButtonIzmeni() {
-        return jButtonIzmeni;
-    }
-
-    public JButton getjButtonObrisi() {
-        return jButtonObrisi;
-    }
-
     public JButton getjButtonZatvori() {
         return jButtonZatvori;
     }
@@ -108,8 +88,6 @@ public class UpravljajZanrovimaForma extends javax.swing.JDialog {
     }
 
     private javax.swing.JButton jButtonDodaj;
-    private javax.swing.JButton jButtonIzmeni;
-    private javax.swing.JButton jButtonObrisi;
     private javax.swing.JButton jButtonZatvori;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableZanrovi;

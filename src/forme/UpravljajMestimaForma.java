@@ -40,8 +40,6 @@ public class UpravljajMestimaForma extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMesta = new javax.swing.JTable();
         btnDodaj = new javax.swing.JButton();
-        btnIzmeni = new javax.swing.JButton();
-        btnObrisi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Upravljaj mestima");
@@ -76,10 +74,6 @@ public class UpravljajMestimaForma extends javax.swing.JDialog {
 
         btnDodaj.setText("Dodaj mesto");
 
-        btnIzmeni.setText("Izmeni mesto");
-
-        btnObrisi.setText("Obriši mesto");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,10 +84,6 @@ public class UpravljajMestimaForma extends javax.swing.JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnDodaj)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnIzmeni)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnObrisi)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -103,10 +93,7 @@ public class UpravljajMestimaForma extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDodaj)
-                    .addComponent(btnIzmeni)
-                    .addComponent(btnObrisi))
+                .addComponent(btnDodaj)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -121,18 +108,8 @@ public class UpravljajMestimaForma extends javax.swing.JDialog {
         return btnDodaj;
     }
 
-    public JButton getBtnIzmeni() {
-        return btnIzmeni;
-    }
-
-    public JButton getBtnObrisi() {
-        return btnObrisi;
-    }
-
     // Variables declaration - do not modify                     
     private javax.swing.JButton btnDodaj;
-    private javax.swing.JButton btnIzmeni;
-    private javax.swing.JButton btnObrisi;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblMesta;
     // End of variables declaration                   
