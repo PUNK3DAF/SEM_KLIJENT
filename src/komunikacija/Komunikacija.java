@@ -186,26 +186,6 @@ public class Komunikacija {
         return zanrovi == null ? new ArrayList<>() : zanrovi;
     }
 
-    public void izmeniZanr(Zanr z) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ZANR, z);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-        
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-    }
-
-    public void obrisiZanr(Zanr z) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ZANR, z);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-        
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-    }
-
     public void kreirajUlogu(Uloga u) throws Exception {
         Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_ULOGU, u);
         posiljalac.posalji(zahtev);
@@ -225,26 +205,6 @@ public class Komunikacija {
         return uloge == null ? new ArrayList<>() : uloge;
     }
 
-    public void izmeniUlogu(Uloga u) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.IZMENI_ULOGU, u);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-    }
-
-    public void obrisiUlogu(Uloga u) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.OBRISI_ULOGU, u);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-    }
-
     public void kreirajMesto(Mesto m) throws Exception {
         Zahtev zahtev = new Zahtev(Operacije.KREIRAJ_MESTO, m);
         posiljalac.posalji(zahtev);
@@ -262,26 +222,6 @@ public class Komunikacija {
 
         List<Mesto> mesta = (List<Mesto>) odg.getOdgovor();
         return mesta == null ? new ArrayList<>() : mesta;
-    }
-
-    public void izmeniMesto(Mesto m) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.IZMENI_MESTO, m);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
-    }
-
-    public void obrisiMesto(Mesto m) throws Exception {
-        Zahtev zahtev = new Zahtev(Operacije.OBRISI_MESTO, m);
-        posiljalac.posalji(zahtev);
-        Odgovor odg = (Odgovor) primalac.primi();
-
-        if (odg.getOdgovor() != null) {
-            throw unwrapException(odg.getOdgovor());
-        }
     }
 
     public void kreirajDogadjaj(Dogadjaj d) throws Exception {
