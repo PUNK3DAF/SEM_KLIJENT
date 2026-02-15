@@ -71,7 +71,7 @@ public class UpravljajDogadjajController {
     private void addDogadjaj() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv dogadjaja:");
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
@@ -136,16 +136,18 @@ public class UpravljajDogadjajController {
     private void editDogadjaj() {
         int selectedRow = forma.getTblDogadjaji().getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(forma, "Morate selektovati dogadjaj!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Nije selektovan dogadjaj");
             return;
         }
 
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
         Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
+        UIHelper.showInfo(forma, "Sistem je ucitao dogadjaj", "Uspeh");
+
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv dogadjaja:", dogadjaj.getNaziv());
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
@@ -210,9 +212,14 @@ public class UpravljajDogadjajController {
     private void deleteDogadjaj() {
         int selectedRow = forma.getTblDogadjaji().getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(forma, "Morate selektovati dogadjaj!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da obrise dogadjaj\nRazlog: Nije selektovan dogadjaj");
             return;
         }
+
+        DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
+        Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
+
+        UIHelper.showInfo(forma, "Sistem je ucitao dogadjaj", "Uspeh");
 
         int confirm = JOptionPane.showConfirmDialog(forma,
                 "Da li ste sigurni da zelite da obrisete ovaj dogadjaj?",
@@ -220,8 +227,6 @@ public class UpravljajDogadjajController {
                 JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
-            Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
             try {
                 Komunikacija.getInstanca().obrisiDogadjaj(dogadjaj);

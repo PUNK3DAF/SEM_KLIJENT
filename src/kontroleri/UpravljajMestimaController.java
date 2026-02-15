@@ -48,7 +48,7 @@ public class UpravljajMestimaController {
     private void addMesto() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv mesta:");
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira mesto\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 

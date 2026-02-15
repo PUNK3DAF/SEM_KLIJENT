@@ -36,7 +36,7 @@ public class UpravljajZanrovimaController {
     private void handleDodaj() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv zanra:", "Dodaj zanr", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv zanra ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira zanr\nRazlog: Naziv ne sme biti prazan");
             return;
         }
         

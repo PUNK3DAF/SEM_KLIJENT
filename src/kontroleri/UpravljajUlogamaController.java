@@ -36,7 +36,7 @@ public class UpravljajUlogamaController {
     private void handleDodaj() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv uloge:", "Dodaj ulogu", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv uloge ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira ulogu\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
