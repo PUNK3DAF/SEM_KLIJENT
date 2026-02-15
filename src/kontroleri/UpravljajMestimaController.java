@@ -5,6 +5,7 @@
 package kontroleri;
 
 import domen.Mesto;
+import forme.UIHelper;
 import forme.UpravljajMestimaForma;
 import forme.model.MestoTableModel;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,7 @@ public class UpravljajMestimaController {
             MestoTableModel model = new MestoTableModel(mesta);
             forma.getTblMesta().setModel(model);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(forma, "Greska pri ucitavanju mesta", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Greska pri ucitavanju mesta", e);
         }
     }
 
@@ -63,9 +64,9 @@ public class UpravljajMestimaController {
         try {
             Komunikacija.getInstanca().kreirajMesto(mesto);
             loadMesta();
-            JOptionPane.showMessageDialog(forma, "Sistem je kreirao mesto", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            UIHelper.showInfo(forma, "Sistem je kreirao mesto", "Uspeh");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira mesto", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira mesto", ex);
         }
     }
 }

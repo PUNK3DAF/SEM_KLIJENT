@@ -1,6 +1,7 @@
 package kontroleri;
 
 import domen.Zanr;
+import forme.UIHelper;
 import forme.UpravljajZanrovimaForma;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class UpravljajZanrovimaController {
         try {
             zanrovi = komunikacija.Komunikacija.getInstanca().ucitajZanrove();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            UIHelper.showError(forma, "Greska pri ucitavanju zanrova", ex);
         }
         forma.setZanrovi(zanrovi);
     }
@@ -44,10 +45,10 @@ public class UpravljajZanrovimaController {
         
         try {
             komunikacija.Komunikacija.getInstanca().kreirajZanr(z);
-            JOptionPane.showMessageDialog(forma, "Sistem je kreirao zanr", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            UIHelper.showInfo(forma, "Sistem je kreirao zanr", "Uspeh");
             ucitajZanrove();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira zanr", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira zanr", ex);
         }
     }
 

@@ -1,6 +1,7 @@
 package kontroleri;
 
 import domen.Uloga;
+import forme.UIHelper;
 import forme.UpravljajUlogamaForma;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class UpravljajUlogamaController {
         try {
             uloge = komunikacija.Komunikacija.getInstanca().ucitajUloge();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            UIHelper.showError(forma, "Greska pri ucitavanju uloga", ex);
         }
         forma.setUloge(uloge);
     }
@@ -44,10 +45,10 @@ public class UpravljajUlogamaController {
 
         try {
             komunikacija.Komunikacija.getInstanca().kreirajUlogu(u);
-            JOptionPane.showMessageDialog(forma, "Sistem je kreirao ulogu", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            UIHelper.showInfo(forma, "Sistem je kreirao ulogu", "Uspeh");
             ucitajUloge();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira ulogu", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira ulogu", ex);
         }
     }
 

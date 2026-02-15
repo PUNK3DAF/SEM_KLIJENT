@@ -7,6 +7,7 @@ package kontroleri;
 import domen.Dogadjaj;
 import domen.Mesto;
 import forme.PrikazDogadjajForma;
+import forme.UIHelper;
 import forme.model.DogadjajTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,7 +64,7 @@ public class UpravljajDogadjajController {
             DogadjajTableModel model = new DogadjajTableModel(dogadjaji);
             forma.getTblDogadjaji().setModel(model);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(forma, "Greska pri ucitavanju dogadjaja", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Greska pri ucitavanju dogadjaja", e);
         }
     }
 
@@ -126,9 +127,9 @@ public class UpravljajDogadjajController {
 
             Komunikacija.getInstanca().kreirajDogadjaj(dogadjaj);
             loadDogadjaje();
-            JOptionPane.showMessageDialog(forma, "Sistem je kreirao dogadjaj", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            UIHelper.showInfo(forma, "Sistem je kreirao dogadjaj", "Uspeh");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira dogadjaj", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj", ex);
         }
     }
 
@@ -200,9 +201,9 @@ public class UpravljajDogadjajController {
 
             Komunikacija.getInstanca().izmeniDogadjaj(dogadjaj);
             loadDogadjaje();
-            JOptionPane.showMessageDialog(forma, "Sistem je zapamtio dogadjaj", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            UIHelper.showInfo(forma, "Sistem je zapamtio dogadjaj", "Uspeh");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Sistem ne moze da zapamti dogadjaj", "Greska", JOptionPane.ERROR_MESSAGE);
+            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj", ex);
         }
     }
 
@@ -225,9 +226,9 @@ public class UpravljajDogadjajController {
             try {
                 Komunikacija.getInstanca().obrisiDogadjaj(dogadjaj);
                 loadDogadjaje();
-                JOptionPane.showMessageDialog(forma, "Sistem je obrisao dogadjaj", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+                UIHelper.showInfo(forma, "Sistem je obrisao dogadjaj", "Uspeh");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(forma, "Sistem ne moze da obrisa dogadjaj", "Greska", JOptionPane.ERROR_MESSAGE);
+                UIHelper.showError(forma, "Sistem ne moze da obrise dogadjaj", ex);
             }
         }
     }
