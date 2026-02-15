@@ -35,7 +35,7 @@ public class UpravljajUlogamaController {
     private void handleDodaj() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv uloge:", "Dodaj ulogu", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv uloge ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Naziv uloge ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -44,10 +44,10 @@ public class UpravljajUlogamaController {
 
         try {
             komunikacija.Komunikacija.getInstanca().kreirajUlogu(u);
-            JOptionPane.showMessageDialog(forma, "Uloga kreirana!", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Sistem je kreirao ulogu", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
             ucitajUloge();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Greška: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira ulogu", "Greska", JOptionPane.ERROR_MESSAGE);
         }
     }
 

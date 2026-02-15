@@ -40,14 +40,14 @@ public class UpravljajMestimaController {
             MestoTableModel model = new MestoTableModel(mesta);
             forma.getTblMesta().setModel(model);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(forma, e.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Greska pri ucitavanju mesta", "Greska", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void addMesto() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv mesta:");
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Naziv ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -63,9 +63,9 @@ public class UpravljajMestimaController {
         try {
             Komunikacija.getInstanca().kreirajMesto(mesto);
             loadMesta();
-            JOptionPane.showMessageDialog(forma, "Mesto je uspešno dodato!");
+            JOptionPane.showMessageDialog(forma, "Sistem je kreirao mesto", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira mesto", "Greska", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

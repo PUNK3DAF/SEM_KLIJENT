@@ -33,9 +33,9 @@ public class UpravljajZanrovimaController {
     }
 
     private void handleDodaj() {
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv žanra:", "Dodaj žanr", JOptionPane.PLAIN_MESSAGE);
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv zanra:", "Dodaj zanr", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(forma, "Naziv žanra ne sme biti prazan!", "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Naziv zanra ne sme biti prazan!", "Greska", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -44,10 +44,10 @@ public class UpravljajZanrovimaController {
         
         try {
             komunikacija.Komunikacija.getInstanca().kreirajZanr(z);
-            JOptionPane.showMessageDialog(forma, "Žanr kreiran!", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Sistem je kreirao zanr", "Uspeh", JOptionPane.INFORMATION_MESSAGE);
             ucitajZanrove();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(forma, "Greška: " + ex.getMessage(), "Greška", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(forma, "Sistem ne moze da kreira zanr", "Greska", JOptionPane.ERROR_MESSAGE);
         }
     }
 
