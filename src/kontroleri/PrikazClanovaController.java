@@ -47,6 +47,7 @@ public class PrikazClanovaController {
                     komunikacija.Komunikacija.getInstanca().obrisiClanaDrustva(full);
                     UIHelper.showInfo(pcf, "Sistem je obrisao clana drustva.");
                     pripremiFormu();
+                    coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                 } catch (Exception ex) {
                     UIHelper.showError(pcf, "Sistem ne moze da obrise clana drustva.", ex);
                 }
