@@ -3,6 +3,7 @@ package kontroleri;
 import domen.Ansambl;
 import domen.ClanDrustva;
 import domen.Ucesce;
+import domen.Zanr;
 import forme.DodajAnsamblForma;
 import forme.FormaMod;
 import forme.UIHelper;
@@ -34,8 +35,14 @@ public class DodajAnsamblController {
             return;
         }
 
+        Zanr zanr = selektujZanr();
+        if (zanr == null) {
+            return;
+        }
+
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
         Ansambl a = new Ansambl(-1, ime, opis, admin);
+        a.setZanr(zanr);
 
         List<Ucesce> ucesca = getUcescaFromCoordinator();
         if (ucesca != null) {
@@ -66,8 +73,14 @@ public class DodajAnsamblController {
             return;
         }
 
+        Zanr zanr = selektujZanr(original.getZanr());
+        if (zanr == null) {
+            return;
+        }
+
         original.setImeAnsambla(ime);
         original.setOpisAnsambla(opis);
+        original.setZanr(zanr);
 
         List<Ucesce> ucesca = getUcescaFromCoordinator();
         original.setUcesca(ucesca);
@@ -161,6 +174,42 @@ public class DodajAnsamblController {
     private void openMemberManager() {
         UpravljajClanovimaForma dlg = new UpravljajClanovimaForma(daf, true);
         new UpravljajClanovimaController(dlg).open();
+    }
+
+    private Zanr selektujZanr() {
+        return selektujZanr(null);
+    }
+
+    private Zanr selektujZanr(Zanr defaultZanr) {
+        List<Zanr> zanrovi = new ArrayList<>();
+        try {
+            zanrovi = komunikacija.Komunikacija.getInstanca().ucitajZanrove();
+        } catch (Exception ex) {
+            UIHelper.showError(daf, "Greska pri ucitavanju zanrova", ex);
+            return null;
+        }
+
+        if (zanrovi == null || zanrovi.isEmpty()) {
+            UIHelper.showError(daf, "Nema dostupnih zanrova. Prvo kreirajte zanr.");
+            return null;
+        }
+
+        Zanr selected = (defaultZanr != null) ? defaultZanr : zanrovi.get(0);
+        javax.swing.JComboBox<Zanr> combo = new javax.swing.JComboBox<>(zanrovi.toArray(new Zanr[0]));
+        combo.setSelectedItem(selected);
+
+        int res = javax.swing.JOptionPane.showConfirmDialog(
+                daf,
+                combo,
+                "Odaberite zanr za ansambl",
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                javax.swing.JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (res == javax.swing.JOptionPane.OK_OPTION && combo.getSelectedItem() instanceof Zanr) {
+            return (Zanr) combo.getSelectedItem();
+        }
+        return null;
     }
 
     public void otvoriFormu(FormaMod fm) {

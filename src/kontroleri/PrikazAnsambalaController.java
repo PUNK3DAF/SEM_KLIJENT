@@ -123,6 +123,7 @@ public class PrikazAnsambalaController {
         sb.append("ID: ").append(a.getAnsamblID()).append("\n");
         sb.append("Ime: ").append(a.getImeAnsambla() == null ? "" : a.getImeAnsambla()).append("\n");
         sb.append("Opis: ").append(a.getOpisAnsambla() == null ? "" : a.getOpisAnsambla()).append("\n");
+        sb.append("Zanr: ").append(a.getZanr() == null ? "" : a.getZanr().getNaziv()).append("\n");
         if (a.getAdmin() != null) {
             String ime = a.getAdmin().getAdminIme();
             String user = a.getAdmin().getAdminUsername();
