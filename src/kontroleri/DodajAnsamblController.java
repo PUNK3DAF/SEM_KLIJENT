@@ -90,6 +90,7 @@ public class DodajAnsamblController {
             UIHelper.showInfo(daf, Konstante.ENSEMBLE_SAVED);
             daf.dispose();
             coordinator.Coordinator.getInstanca().osveziFormu();
+            coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
         } catch (Exception ex) {
             UIHelper.showError(daf, Konstante.ERROR_SAVE_ENSEMBLE, ex);
             refreshFormFromServer(original);
