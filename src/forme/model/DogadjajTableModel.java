@@ -15,8 +15,8 @@ import javax.swing.table.AbstractTableModel;
 public class DogadjajTableModel extends AbstractTableModel {
 
     List<Dogadjaj> dogadjaji;
-    String[] columnNames = new String[]{"ID", "Naziv", "Datum", "Mesto"};
-    Class[] columnClass = new Class[]{Integer.class, String.class, String.class, String.class};
+    String[] columnNames = new String[]{"ID", "Naziv", "Datum", "Mesto", "Ansambl"};
+    Class[] columnClass = new Class[]{Integer.class, String.class, String.class, String.class, String.class};
 
     public DogadjajTableModel(List<Dogadjaj> dogadjaji) {
         this.dogadjaji = dogadjaji;
@@ -50,6 +50,11 @@ public class DogadjajTableModel extends AbstractTableModel {
                     return d.getMesto().getNaziv();
                 }
                 return "Mesto #" + d.getMestoID();
+            case 4:
+                if (d.getAnsambl() != null) {
+                    return d.getAnsambl().getImeAnsambla();
+                }
+                return "Ansambl #" + d.getAnsamblID();
             default:
                 return "N/A";
         }

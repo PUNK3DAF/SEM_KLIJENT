@@ -4,6 +4,7 @@
  */
 package kontroleri;
 
+import domen.Ansambl;
 import domen.Dogadjaj;
 import domen.Mesto;
 import forme.PrikazDogadjajForma;
@@ -11,8 +12,6 @@ import forme.UIHelper;
 import forme.model.DogadjajTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -98,7 +97,7 @@ public class UpravljajDogadjajController {
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
             if (mesta.isEmpty()) {
-                JOptionPane.showMessageDialog(forma, "Nema dostupnih mesta!", "Greska", JOptionPane.ERROR_MESSAGE);
+                UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Nema dostupnih mesta");
                 return;
             }
 
@@ -115,7 +114,12 @@ public class UpravljajDogadjajController {
 
             Mesto izbrano = (Mesto) comboMesto.getSelectedItem();
             if (izbrano == null) {
-                JOptionPane.showMessageDialog(forma, "Vazece mesto nije izabrano!", "Greska", JOptionPane.ERROR_MESSAGE);
+                UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Vazece mesto nije izabrano");
+                return;
+            }
+
+            Ansambl ansambl = selectAnsambl("Sistem ne moze da kreira dogadjaj", null);
+            if (ansambl == null) {
                 return;
             }
 
@@ -124,6 +128,8 @@ public class UpravljajDogadjajController {
             dogadjaj.setDatum(datum);
             dogadjaj.setMestoID(izbrano.getMestoID());
             dogadjaj.setMesto(izbrano);
+            dogadjaj.setAnsamblID(ansambl.getAnsamblID());
+            dogadjaj.setAnsambl(ansambl);
 
             Komunikacija.getInstanca().kreirajDogadjaj(dogadjaj);
             loadDogadjaje();
@@ -174,7 +180,7 @@ public class UpravljajDogadjajController {
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
             if (mesta.isEmpty()) {
-                JOptionPane.showMessageDialog(forma, "Nema dostupnih mesta!", "Greska", JOptionPane.ERROR_MESSAGE);
+                UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Nema dostupnih mesta");
                 return;
             }
 
@@ -192,7 +198,12 @@ public class UpravljajDogadjajController {
 
             Mesto izbrano = (Mesto) comboMesto.getSelectedItem();
             if (izbrano == null) {
-                JOptionPane.showMessageDialog(forma, "Vazece mesto nije izabrano!", "Greska", JOptionPane.ERROR_MESSAGE);
+                UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Vazece mesto nije izabrano");
+                return;
+            }
+
+            Ansambl ansambl = selectAnsambl("Sistem ne moze da zapamti dogadjaj", dogadjaj.getAnsambl());
+            if (ansambl == null) {
                 return;
             }
 
@@ -200,6 +211,8 @@ public class UpravljajDogadjajController {
             dogadjaj.setDatum(datum);
             dogadjaj.setMestoID(izbrano.getMestoID());
             dogadjaj.setMesto(izbrano);
+            dogadjaj.setAnsamblID(ansambl.getAnsamblID());
+            dogadjaj.setAnsambl(ansambl);
 
             Komunikacija.getInstanca().izmeniDogadjaj(dogadjaj);
             loadDogadjaje();
@@ -236,5 +249,35 @@ public class UpravljajDogadjajController {
                 UIHelper.showError(forma, "Sistem ne moze da obrise dogadjaj", ex);
             }
         }
+    }
+
+    private Ansambl selectAnsambl(String errorPrefix, Ansambl preselected) throws Exception {
+        List<Ansambl> ansambli = Komunikacija.getInstanca().ucitajAnsamble();
+        if (ansambli == null || ansambli.isEmpty()) {
+            UIHelper.showError(forma, errorPrefix + "\nRazlog: Ne postoji nijedan ansambl");
+            return null;
+        }
+
+        JComboBox<Ansambl> comboAnsambl = new JComboBox<>();
+        for (Ansambl a : ansambli) {
+            comboAnsambl.addItem(a);
+        }
+        if (preselected != null) {
+            comboAnsambl.setSelectedItem(preselected);
+        }
+
+        int result = JOptionPane.showConfirmDialog(forma, comboAnsambl, "Izaberite ansambl:",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (result != JOptionPane.OK_OPTION) {
+            return null;
+        }
+
+        Ansambl izabrani = (Ansambl) comboAnsambl.getSelectedItem();
+        if (izabrani == null) {
+            UIHelper.showError(forma, errorPrefix + "\nRazlog: Vazeci ansambl nije izabran");
+            return null;
+        }
+
+        return izabrani;
     }
 }
