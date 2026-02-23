@@ -20,6 +20,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import komunikacija.Komunikacija;
 
 /**
@@ -62,6 +65,7 @@ public class UpravljajDogadjajController {
             List<Dogadjaj> dogadjaji = Komunikacija.getInstanca().ucitajDogadjaje();
             DogadjajTableModel model = new DogadjajTableModel(dogadjaji);
             forma.getTblDogadjaji().setModel(model);
+            adjustDogadjajiTableColumns(forma.getTblDogadjaji());
         } catch (Exception e) {
             UIHelper.showError(forma, "Greska pri ucitavanju dogadjaja", e);
         }
@@ -279,5 +283,29 @@ public class UpravljajDogadjajController {
         }
 
         return izabrani;
+    }
+
+    private void adjustDogadjajiTableColumns(JTable table) {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        int rowCount = table.getRowCount();
+
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            TableColumn column = table.getColumnModel().getColumn(col);
+            int width = 50;
+
+            TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+            java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(
+                    table, column.getHeaderValue(), false, false, 0, col);
+            width = Math.max(width, headerComp.getPreferredSize().width + 12);
+
+            for (int row = 0; row < rowCount; row++) {
+                TableCellRenderer cellRenderer = table.getCellRenderer(row, col);
+                java.awt.Component cellComp = cellRenderer.getTableCellRendererComponent(
+                        table, table.getValueAt(row, col), false, false, row, col);
+                width = Math.max(width, cellComp.getPreferredSize().width + 12);
+            }
+
+            column.setPreferredWidth(Math.min(width, 400));
+        }
     }
 }
