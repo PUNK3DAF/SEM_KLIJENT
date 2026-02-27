@@ -146,7 +146,7 @@ public class UpravljajDogadjajController {
     private void editDogadjaj() {
         int selectedRow = forma.getTblDogadjaji().getSelectedRow();
         if (selectedRow == -1) {
-            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Nije selektovan dogadjaj");
+            UIHelper.showError(forma, "Sistem ne moze da ucita dogadjaj\nRazlog: Nije selektovan dogadjaj");
             return;
         }
 
