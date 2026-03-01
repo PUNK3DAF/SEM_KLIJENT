@@ -49,12 +49,12 @@ public class DogadjajTableModel extends AbstractTableModel {
                 if (d.getMesto() != null) {
                     return d.getMesto().getNaziv();
                 }
-                return "Mesto #" + d.getMestoID();
+                return "Mesto #" + (d.getMesto() != null ? d.getMesto().getMestoID() : "?");
             case 4:
                 if (d.getAnsambl() != null) {
                     return d.getAnsambl().getImeAnsambla();
                 }
-                return "Ansambl #" + d.getAnsamblID();
+                return "Ansambl #" + (d.getAnsambl() != null ? d.getAnsambl().getAnsamblID() : "?");
             default:
                 return "N/A";
         }

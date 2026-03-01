@@ -3,6 +3,7 @@ package kontroleri;
 import domen.Ansambl;
 import domen.ClanDrustva;
 import domen.Ucesce;
+import domen.Uloga;
 import domen.Zanr;
 import forme.DodajAnsamblForma;
 import forme.FormaMod;
@@ -41,7 +42,11 @@ public class DodajAnsamblController {
         }
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
-        Ansambl a = new Ansambl(-1, ime, opis, admin);
+        Ansambl a = new Ansambl();
+        a.setAnsamblID(-1);
+        a.setImeAnsambla(ime);
+        a.setOpisAnsambla(opis);
+        a.setAdmin(admin);
         a.setZanr(zanr);
 
         List<Ucesce> ucesca = getUcescaFromCoordinator();
@@ -135,7 +140,9 @@ public class DodajAnsamblController {
                 Ucesce u = new Ucesce();
                 u.setClan(c);
                 Integer roleId = uloge.getOrDefault(c.getClanID(), 1);
-                u.setUloga(String.valueOf(roleId));
+                Uloga uloga = new Uloga();
+                uloga.setUlogaID(roleId);
+                u.setUloga(uloga);
                 res.add(u);
             }
         }
