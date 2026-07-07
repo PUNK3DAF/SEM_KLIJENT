@@ -1,6 +1,7 @@
 package kontroleri;
 
 import domen.ClanDrustva;
+import domen.Ucesce;
 import forme.PrikazClanovaForma;
 import forme.UIHelper;
 import forme.model.ModelTabeleClan;
@@ -156,7 +157,35 @@ public class PrikazClanovaController {
             }
             sb.append("\n");
         }
+        sb.append("Ansambli: ").append(formatAnsambli(c.getClanID())).append("\n");
         return sb.toString();
+    }
+
+    private String formatAnsambli(int clanId) {
+        List<Ucesce> ucesca = komunikacija.Komunikacija.getInstanca().ucitajUcesca();
+        if (ucesca == null || ucesca.isEmpty()) {
+            return "Nema podataka.";
+        }
+
+        StringBuilder ansambli = new StringBuilder();
+        for (Ucesce u : ucesca) {
+            if (u == null || u.getClan() == null || u.getClan().getClanID() != clanId || u.getAnsambl() == null) {
+                continue;
+            }
+
+            if (ansambli.length() > 0) {
+                ansambli.append(", ");
+            }
+
+            String imeAnsambla = u.getAnsambl().getImeAnsambla();
+            if (imeAnsambla != null && !imeAnsambla.trim().isEmpty()) {
+                ansambli.append(imeAnsambla.trim());
+            } else {
+                ansambli.append("ID=").append(u.getAnsambl().getAnsamblID());
+            }
+        }
+
+        return ansambli.length() == 0 ? "Nema ucesca u ansamblima." : ansambli.toString();
     }
 
     public void otvoriFormu() {
