@@ -14,7 +14,7 @@ public class ModelTabeleClan extends AbstractTableModel {
 
     private List<ClanDrustva> originalLista;
     private List<ClanDrustva> lista;
-    String[] kolone = {"ID", "Ime", "Pol", "Godine", "Telefon", "Admin ID"};
+    String[] kolone = {"ID", "Ime", "Pol", "Godine", "Telefon", "Mejl", "Admin ID"};
 
     public ModelTabeleClan(List<ClanDrustva> lista) {
         if (lista == null) {
@@ -62,6 +62,8 @@ public class ModelTabeleClan extends AbstractTableModel {
             case 4:
                 return c.getClanBrTel();
             case 5:
+                return c.getClanEmail();
+            case 6:
                 return (c.getAdmin() == null) ? null : c.getAdmin().getAdminID();
             default:
                 return "N/A";
@@ -81,7 +83,8 @@ public class ModelTabeleClan extends AbstractTableModel {
         List<ClanDrustva> filtriranaLista = originalLista.stream()
                 .filter(c -> {
                     String cIme = (c.getClanIme() == null) ? "" : c.getClanIme().toLowerCase();
-                    return imeFilter.isEmpty() || cIme.contains(imeFilter);
+                    String cEmail = (c.getClanEmail() == null) ? "" : c.getClanEmail().toLowerCase();
+                    return imeFilter.isEmpty() || cIme.contains(imeFilter) || cEmail.contains(imeFilter);
                 })
                 .filter(c -> {
                     String cPol = (c.getClanPol() == null) ? "" : c.getClanPol().toLowerCase();

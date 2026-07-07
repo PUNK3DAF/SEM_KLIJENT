@@ -138,6 +138,7 @@ public class PrikazClanovaController {
         }
         sb.append("\n");
         sb.append("Telefon: ").append(c.getClanBrTel() == null ? "" : c.getClanBrTel()).append("\n");
+        sb.append("Mejl: ").append(c.getClanEmail() == null ? "" : c.getClanEmail()).append("\n");
         if (c.getAdmin() != null) {
             String adminIme = c.getAdmin().getAdminIme();
             String adminUser = c.getAdmin().getAdminUsername();

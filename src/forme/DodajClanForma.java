@@ -34,10 +34,12 @@ public class DodajClanForma extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jTextFieldIme = new javax.swing.JTextField();
         jTextFieldPol = new javax.swing.JTextField();
         jTextFieldTel = new javax.swing.JTextField();
         jTextFieldGod = new javax.swing.JTextField();
+        jTextFieldEmail = new javax.swing.JTextField();
         jButtonDodaj = new javax.swing.JButton();
         jButtonAzuriraj = new javax.swing.JButton();
 
@@ -50,6 +52,11 @@ public class DodajClanForma extends javax.swing.JFrame {
         jLabel3.setText("Godine:");
 
         jLabel4.setText("Telefon:");
+
+        jLabel5.setText("Mejl:");
+
+        jTextFieldEmail.setEditable(false);
+        jTextFieldEmail.setFocusable(false);
 
         jButtonDodaj.setText("DODAJ");
 
@@ -81,7 +88,11 @@ public class DodajClanForma extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldTel, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jTextFieldTel, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -119,6 +130,11 @@ public class DodajClanForma extends javax.swing.JFrame {
                             .addComponent(jTextFieldTel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
                         .addComponent(jButtonAzuriraj)))
                 .addContainerGap(91, Short.MAX_VALUE))
         );
@@ -153,6 +169,10 @@ public class DodajClanForma extends javax.swing.JFrame {
         return jTextFieldTel;
     }
 
+    public JTextField getjTextFieldEmail() {
+        return jTextFieldEmail;
+    }
+
     public JButton getjButtonAzuriraj() {
         return jButtonAzuriraj;
     }
@@ -168,7 +188,9 @@ public class DodajClanForma extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextFieldGod;
+    private javax.swing.JTextField jTextFieldEmail;
     private javax.swing.JTextField jTextFieldIme;
     private javax.swing.JTextField jTextFieldPol;
     private javax.swing.JTextField jTextFieldTel;

@@ -5,6 +5,8 @@ import forme.DodajClanForma;
 import forme.FormaMod;
 import forme.UIHelper;
 import komunikacija.Konstante;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class DodajClanController {
 
@@ -18,6 +20,22 @@ public class DodajClanController {
     private void addActionListeners() {
         dcf.addDodajActionListener(e -> handleDodaj());
         dcf.addAzurirajActionListener(e -> handleAzuriraj());
+        dcf.getjTextFieldIme().getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                azurirajEmailPregled();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                azurirajEmailPregled();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                azurirajEmailPregled();
+            }
+        });
     }
 
     private void handleDodaj() {
@@ -25,12 +43,19 @@ public class DodajClanController {
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
+        String email = validirajIFormirajEmail(ime);
+        if (email == null) {
+            return;
+        }
+
+        dcf.getjTextFieldEmail().setText(email);
 
         int god = parseGodine(godS);
         if (god == -1) return;
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
         ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, admin);
+        c.setClanEmail(email);
 
         try {
             komunikacija.Komunikacija.getInstanca().kreirajClanaDrustva(c);
@@ -47,6 +72,12 @@ public class DodajClanController {
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
+        String email = validirajIFormirajEmail(ime);
+        if (email == null) {
+            return;
+        }
+
+        dcf.getjTextFieldEmail().setText(email);
 
         int god = parseGodine(godS);
         if (god == -1) return;
@@ -61,6 +92,7 @@ public class DodajClanController {
         original.setClanPol(pol);
         original.setClanGod(god);
         original.setClanBrTel(tel);
+        original.setClanEmail(email);
 
         try {
             komunikacija.Komunikacija.getInstanca().izmeniClanaDrustva(original);
@@ -102,6 +134,7 @@ public class DodajClanController {
                         dcf.getjTextFieldPol().setText(fresh.getClanPol() == null ? "" : fresh.getClanPol());
                         dcf.getjTextFieldGod().setText(fresh.getClanGod() > 0 ? String.valueOf(fresh.getClanGod()) : "");
                         dcf.getjTextFieldTel().setText(fresh.getClanBrTel() == null ? "" : fresh.getClanBrTel());
+                        dcf.getjTextFieldEmail().setText(fresh.getClanEmail() == null ? "" : fresh.getClanEmail());
                     } else {
                         clearForm();
                     }
@@ -117,6 +150,7 @@ public class DodajClanController {
         dcf.getjTextFieldPol().setText("");
         dcf.getjTextFieldGod().setText("");
         dcf.getjTextFieldTel().setText("");
+        dcf.getjTextFieldEmail().setText("");
     }
 
     public void otvoriFormu(FormaMod fm) {
@@ -141,10 +175,42 @@ public class DodajClanController {
                     dcf.getjTextFieldPol().setText(c.getClanPol());
                     dcf.getjTextFieldGod().setText(String.valueOf(c.getClanGod()));
                     dcf.getjTextFieldTel().setText(c.getClanBrTel());
+                    dcf.getjTextFieldEmail().setText(c.getClanEmail() == null ? izracunajEmailZaPregled(c.getClanIme()) : c.getClanEmail());
                 }
                 break;
             default:
                 throw new AssertionError();
         }
+    }
+
+    private void azurirajEmailPregled() {
+        String email = izracunajEmailZaPregled(dcf.getjTextFieldIme().getText());
+        dcf.getjTextFieldEmail().setText(email == null ? "" : email);
+    }
+
+    private String validirajIFormirajEmail(String ime) {
+        if (ime == null || ime.trim().isEmpty()) {
+            UIHelper.showError(dcf, "Ime i prezime su obavezni za formiranje mejla.");
+            return null;
+        }
+        if (ime.trim().split("\\s+").length < 2) {
+            UIHelper.showError(dcf, "Unesite ime i prezime kako bi mejl mogao da se formira.");
+            return null;
+        }
+
+        String email = ClanDrustva.formirajEmail(ime);
+        if (!ClanDrustva.jeValidanEmail(email)) {
+            UIHelper.showError(dcf, "Mejl nije ispravno formiran.");
+            return null;
+        }
+        return email;
+    }
+
+    private String izracunajEmailZaPregled(String ime) {
+        if (ime == null || ime.trim().split("\\s+").length < 2) {
+            return null;
+        }
+        String email = ClanDrustva.formirajEmail(ime);
+        return ClanDrustva.jeValidanEmail(email) ? email : null;
     }
 }
