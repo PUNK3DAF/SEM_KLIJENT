@@ -6,7 +6,9 @@ import forme.PrikazClanovaForma;
 import forme.UIHelper;
 import forme.model.ModelTabeleClan;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import javax.swing.table.TableColumnModel;
 
 public class PrikazClanovaController {
 
@@ -201,9 +203,26 @@ public class PrikazClanovaController {
         }
         ModelTabeleClan mtc = new ModelTabeleClan(clanovi);
         pcf.getjTableClanovi().setModel(mtc);
+        podesiSirineKolona();
     }
 
     public void osveziFormu() {
         pripremiFormu();
+    }
+
+    private void podesiSirineKolona() {
+        JTable tabela = pcf.getjTableClanovi();
+        if (tabela == null || tabela.getColumnModel() == null || tabela.getColumnCount() < 7) {
+            return;
+        }
+
+        TableColumnModel kolone = tabela.getColumnModel();
+        kolone.getColumn(0).setPreferredWidth(50);  // ID
+        kolone.getColumn(1).setPreferredWidth(170); // Ime
+        kolone.getColumn(2).setPreferredWidth(70);  // Pol
+        kolone.getColumn(3).setPreferredWidth(80);  // Godine
+        kolone.getColumn(4).setPreferredWidth(140); // Telefon
+        kolone.getColumn(5).setPreferredWidth(260); // Mejl
+        kolone.getColumn(6).setPreferredWidth(80);  // Admin ID
     }
 }
