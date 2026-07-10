@@ -29,7 +29,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Clanovi Drustva"/>
+            <Property name="text" type="java.lang.String" value="&#x10c;lanovi Drustva"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemClanDodaj">
