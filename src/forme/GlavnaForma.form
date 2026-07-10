@@ -19,7 +19,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemAnsamblPrikaz">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Prikazi"/>
+                <Property name="text" type="java.lang.String" value="Prika&#x17e;i"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemAnsamblPrikazActionPerformed"/>
@@ -42,7 +42,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemClanPrikaz">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Prikazi"/>
+                <Property name="text" type="java.lang.String" value="Prika&#x17e;i"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemClanPrikazActionPerformed"/>

@@ -123,7 +123,7 @@ public class GlavnaForma extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItemAnsamblDodaj);
 
-        jMenuItemAnsamblPrikaz.setText("Prikazi");
+        jMenuItemAnsamblPrikaz.setText("Prikaži");
         jMenuItemAnsamblPrikaz.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemAnsamblPrikazActionPerformed(evt);
@@ -143,7 +143,7 @@ public class GlavnaForma extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItemClanDodaj);
 
-        jMenuItemClanPrikaz.setText("Prikazi");
+        jMenuItemClanPrikaz.setText("Prikaži");
         jMenuItemClanPrikaz.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemClanPrikazActionPerformed(evt);
