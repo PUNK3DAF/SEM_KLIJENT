@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 public class DodajClanController {
 
     private final DodajClanForma dcf;
+    private String poslednjiAutoEmail = "";
 
     public DodajClanController(DodajClanForma dcf) {
         this.dcf = dcf;
@@ -43,12 +44,14 @@ public class DodajClanController {
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
-        String email = validirajIFormirajEmail(ime);
-        if (email == null) {
+        if (!validirajIme(ime)) {
             return;
         }
 
-        dcf.getjTextFieldEmail().setText(email);
+        String email = validirajRucniEmail();
+        if (email == null) {
+            return;
+        }
 
         int god = parseGodine(godS);
         if (god == -1) return;
@@ -72,12 +75,14 @@ public class DodajClanController {
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
-        String email = validirajIFormirajEmail(ime);
-        if (email == null) {
+        if (!validirajIme(ime)) {
             return;
         }
 
-        dcf.getjTextFieldEmail().setText(email);
+        String email = validirajRucniEmail();
+        if (email == null) {
+            return;
+        }
 
         int god = parseGodine(godS);
         if (god == -1) return;
@@ -164,6 +169,9 @@ public class DodajClanController {
                 dcf.getjButtonAzuriraj().setVisible(false);
                 dcf.getjButtonDodaj().setVisible(true);
                 dcf.getjButtonDodaj().setEnabled(true);
+                dcf.getjTextFieldEmail().setText(izracunajEmailZaPregled(dcf.getjTextFieldIme().getText()) == null
+                        ? "" : izracunajEmailZaPregled(dcf.getjTextFieldIme().getText()));
+                poslednjiAutoEmail = dcf.getjTextFieldEmail().getText().trim();
                 break;
             case IZMENI:
                 dcf.getjButtonDodaj().setVisible(false);
@@ -176,6 +184,7 @@ public class DodajClanController {
                     dcf.getjTextFieldGod().setText(String.valueOf(c.getClanGod()));
                     dcf.getjTextFieldTel().setText(c.getClanBrTel());
                     dcf.getjTextFieldEmail().setText(c.getClanEmail() == null ? izracunajEmailZaPregled(c.getClanIme()) : c.getClanEmail());
+                    poslednjiAutoEmail = izracunajEmailZaPregled(c.getClanIme()) == null ? "" : izracunajEmailZaPregled(c.getClanIme());
                 }
                 break;
             default:
@@ -184,23 +193,41 @@ public class DodajClanController {
     }
 
     private void azurirajEmailPregled() {
+        String trenutniEmail = dcf.getjTextFieldEmail().getText() == null ? "" : dcf.getjTextFieldEmail().getText().trim();
+        if (!trenutniEmail.isEmpty() && !trenutniEmail.equalsIgnoreCase(poslednjiAutoEmail)) {
+            return;
+        }
+
         String email = izracunajEmailZaPregled(dcf.getjTextFieldIme().getText());
-        dcf.getjTextFieldEmail().setText(email == null ? "" : email);
+        String autoEmail = email == null ? "" : email;
+        dcf.getjTextFieldEmail().setText(autoEmail);
+        poslednjiAutoEmail = autoEmail;
     }
 
-    private String validirajIFormirajEmail(String ime) {
+    private boolean validirajIme(String ime) {
         if (ime == null || ime.trim().isEmpty()) {
-            UIHelper.showError(dcf, "Ime i prezime su obavezni za formiranje mejla.");
-            return null;
+            UIHelper.showError(dcf, "Ime i prezime su obavezni.");
+            return false;
         }
         if (ime.trim().split("\\s+").length < 2) {
-            UIHelper.showError(dcf, "Unesite ime i prezime kako bi mejl mogao da se formira.");
+            UIHelper.showError(dcf, "Unesite ime i prezime.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private String validirajRucniEmail() {
+        String email = dcf.getjTextFieldEmail().getText();
+        email = email == null ? "" : email.trim().toLowerCase();
+
+        if (email.isEmpty()) {
+            UIHelper.showError(dcf, "Mejl je obavezan.");
             return null;
         }
 
-        String email = ClanDrustva.formirajEmail(ime);
         if (!ClanDrustva.jeValidanEmail(email)) {
-            UIHelper.showError(dcf, "Mejl nije ispravno formiran.");
+            UIHelper.showError(dcf, "Mejl nije u ispravnom formatu.");
             return null;
         }
         return email;
