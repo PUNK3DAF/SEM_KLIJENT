@@ -61,7 +61,7 @@ public class DodajClanForma extends javax.swing.JFrame {
 
         jButtonDodaj.setText("DODAJ");
 
-        jButtonAzuriraj.setText("AZURIRAJ");
+        jButtonAzuriraj.setText("AŽURIRAJ");
         jButtonAzuriraj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAzurirajActionPerformed(evt);
