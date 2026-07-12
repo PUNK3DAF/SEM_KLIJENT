@@ -52,9 +52,9 @@ public class DodajAnsamblForma extends javax.swing.JFrame {
 
         jButtonDodaj.setText("DODAJ");
 
-        jButtonAzuriraj.setText("AZURIRAJ");
+        jButtonAzuriraj.setText("AŽURIRAJ");
 
-        jButtonUpravljajClanovima.setText("UPRAVLJAJ CLANOVIMA");
+        jButtonUpravljajClanovima.setText("UPRAVLJAJ ČLANOVIMA");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
