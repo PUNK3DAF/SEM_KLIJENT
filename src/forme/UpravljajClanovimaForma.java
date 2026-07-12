@@ -56,9 +56,9 @@ public class UpravljajClanovimaForma extends javax.swing.JDialog {
 
         jButtonObrisi.setText(">>");
 
-        jButtonIzadji.setText("IZADJI");
+        jButtonIzadji.setText("IZAĐI");
 
-        jButtonSacuvaj.setText("SACUVAJ");
+        jButtonSacuvaj.setText("SAČUVAJ");
         jButtonSacuvaj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSacuvajActionPerformed(evt);
