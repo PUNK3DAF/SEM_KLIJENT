@@ -74,11 +74,11 @@ public class PrikazClanovaForma extends javax.swing.JFrame {
 
         jButtonPretraga.setText("PRETRAGA");
 
-        jButtonObrisi.setText("OBRISI");
+        jButtonObrisi.setText("OBRIŠI");
 
-        jButtonAzuriraj.setText("AZURIRAJ");
+        jButtonAzuriraj.setText("AŽURIRAJ");
 
-        jButtonPrikazi.setText("PRIKAZI");
+        jButtonPrikazi.setText("PRIKAŽI");
         jButtonPrikazi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPrikaziActionPerformed(evt);
