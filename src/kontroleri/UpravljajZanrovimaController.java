@@ -28,15 +28,15 @@ public class UpravljajZanrovimaController {
         try {
             zanrovi = komunikacija.Komunikacija.getInstanca().ucitajZanrove();
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Greska pri ucitavanju zanrova", ex);
+            UIHelper.showError(forma, "Greška pri učitavanju žanrova", ex);
         }
         forma.setZanrovi(zanrovi);
     }
 
     private void handleDodaj() {
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv zanra:", "Dodaj zanr", JOptionPane.PLAIN_MESSAGE);
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv žanra:", "Dodaj žanr", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira zanr\nRazlog: Naziv ne sme biti prazan");
+            UIHelper.showError(forma, "Sistem ne može da kreira žanr\nRazlog: Naziv ne sme biti prazan");
             return;
         }
         
@@ -45,10 +45,10 @@ public class UpravljajZanrovimaController {
         
         try {
             komunikacija.Komunikacija.getInstanca().kreirajZanr(z);
-            UIHelper.showInfo(forma, "Sistem je kreirao zanr", "Uspeh");
+            UIHelper.showInfo(forma, "Sistem je kreirao žanr", "Uspeh");
             ucitajZanrove();
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira zanr", ex);
+            UIHelper.showError(forma, "Sistem ne može da kreira žanr", ex);
         }
     }
 
