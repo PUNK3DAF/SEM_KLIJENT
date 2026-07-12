@@ -67,14 +67,14 @@ public class UpravljajDogadjajController {
             forma.getTblDogadjaji().setModel(model);
             adjustDogadjajiTableColumns(forma.getTblDogadjaji());
         } catch (Exception e) {
-            UIHelper.showError(forma, "Greska pri ucitavanju dogadjaja", e);
+            UIHelper.showError(forma, "Greška pri učitavanju događaja", e);
         }
     }
 
     private void addDogadjaj() {
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv dogadjaja:");
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv događaja:");
         if (naziv == null || naziv.trim().isEmpty()) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Naziv ne sme biti prazan");
+            UIHelper.showError(forma, "Sistem ne može da kreira događaj\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
@@ -101,7 +101,7 @@ public class UpravljajDogadjajController {
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
             if (mesta.isEmpty()) {
-                UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Nema dostupnih mesta");
+                UIHelper.showError(forma, "Sistem ne može da kreira događaj\nRazlog: Nema dostupnih mesta");
                 return;
             }
 
@@ -118,11 +118,11 @@ public class UpravljajDogadjajController {
 
             Mesto izbrano = (Mesto) comboMesto.getSelectedItem();
             if (izbrano == null) {
-                UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj\nRazlog: Vazece mesto nije izabrano");
+                UIHelper.showError(forma, "Sistem ne može da kreira događaj\nRazlog: Važeće mesto nije izabrano");
                 return;
             }
 
-            Ansambl ansambl = selectAnsambl("Sistem ne moze da kreira dogadjaj", null);
+            Ansambl ansambl = selectAnsambl("Sistem ne može da kreira događaj", null);
             if (ansambl == null) {
                 return;
             }
@@ -135,27 +135,27 @@ public class UpravljajDogadjajController {
 
             Komunikacija.getInstanca().kreirajDogadjaj(dogadjaj);
             loadDogadjaje();
-            UIHelper.showInfo(forma, "Sistem je kreirao dogadjaj", "Uspeh");
+            UIHelper.showInfo(forma, "Sistem je kreirao događaj", "Uspeh");
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira dogadjaj", ex);
+            UIHelper.showError(forma, "Sistem ne može da kreira događaj", ex);
         }
     }
 
     private void editDogadjaj() {
         int selectedRow = forma.getTblDogadjaji().getSelectedRow();
         if (selectedRow == -1) {
-            UIHelper.showError(forma, "Sistem ne moze da ucita dogadjaj\nRazlog: Nije selektovan dogadjaj");
+            UIHelper.showError(forma, "Sistem ne može da učita događaj\nRazlog: Nije selektovan događaj");
             return;
         }
 
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
         Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
-        UIHelper.showInfo(forma, "Sistem je ucitao dogadjaj", "Uspeh");
+        UIHelper.showInfo(forma, "Sistem je učitao događaj", "Uspeh");
 
-        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv dogadjaja:", dogadjaj.getNaziv());
+        String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv događaja:", dogadjaj.getNaziv());
         if (naziv == null || naziv.trim().isEmpty()) {
-            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Naziv ne sme biti prazan");
+            UIHelper.showError(forma, "Sistem ne može da zapamti događaj\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
@@ -182,7 +182,7 @@ public class UpravljajDogadjajController {
         try {
             List<Mesto> mesta = Komunikacija.getInstanca().ucitajMesta();
             if (mesta.isEmpty()) {
-                UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Nema dostupnih mesta");
+                UIHelper.showError(forma, "Sistem ne može da zapamti događaj\nRazlog: Nema dostupnih mesta");
                 return;
             }
 
@@ -200,11 +200,11 @@ public class UpravljajDogadjajController {
 
             Mesto izbrano = (Mesto) comboMesto.getSelectedItem();
             if (izbrano == null) {
-                UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj\nRazlog: Vazece mesto nije izabrano");
+                UIHelper.showError(forma, "Sistem ne može da zapamti događaj\nRazlog: Važeće mesto nije izabrano");
                 return;
             }
 
-            Ansambl ansambl = selectAnsambl("Sistem ne moze da zapamti dogadjaj", dogadjaj.getAnsambl());
+            Ansambl ansambl = selectAnsambl("Sistem ne može da zapamti događaj", dogadjaj.getAnsambl());
             if (ansambl == null) {
                 return;
             }
@@ -216,26 +216,26 @@ public class UpravljajDogadjajController {
 
             Komunikacija.getInstanca().izmeniDogadjaj(dogadjaj);
             loadDogadjaje();
-            UIHelper.showInfo(forma, "Sistem je zapamtio dogadjaj", "Uspeh");
+            UIHelper.showInfo(forma, "Sistem je zapamtio događaj", "Uspeh");
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Sistem ne moze da zapamti dogadjaj", ex);
+            UIHelper.showError(forma, "Sistem ne može da zapamti događaj", ex);
         }
     }
 
     private void deleteDogadjaj() {
         int selectedRow = forma.getTblDogadjaji().getSelectedRow();
         if (selectedRow == -1) {
-            UIHelper.showError(forma, "Sistem ne moze da obrise dogadjaj\nRazlog: Nije selektovan dogadjaj");
+            UIHelper.showError(forma, "Sistem ne može da obriše događaj\nRazlog: Nije selektovan događaj");
             return;
         }
 
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
         Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
 
-        UIHelper.showInfo(forma, "Sistem je ucitao dogadjaj", "Uspeh");
+        UIHelper.showInfo(forma, "Sistem je učitao događaj", "Uspeh");
 
         int confirm = JOptionPane.showConfirmDialog(forma,
-                "Da li ste sigurni da zelite da obrisete ovaj dogadjaj?",
+                "Da li ste sigurni da želite da obrišete ovaj događaj?",
                 "Potvrda brisanja",
                 JOptionPane.YES_NO_OPTION);
 
@@ -244,9 +244,9 @@ public class UpravljajDogadjajController {
             try {
                 Komunikacija.getInstanca().obrisiDogadjaj(dogadjaj);
                 loadDogadjaje();
-                UIHelper.showInfo(forma, "Sistem je obrisao dogadjaj", "Uspeh");
+                UIHelper.showInfo(forma, "Sistem je obrisao događaj", "Uspeh");
             } catch (Exception ex) {
-                UIHelper.showError(forma, "Sistem ne moze da obrise dogadjaj", ex);
+                UIHelper.showError(forma, "Sistem ne može da obriše događaj", ex);
             }
         }
     }
@@ -274,7 +274,7 @@ public class UpravljajDogadjajController {
 
         Ansambl izabrani = (Ansambl) comboAnsambl.getSelectedItem();
         if (izabrani == null) {
-            UIHelper.showError(forma, errorPrefix + "\nRazlog: Vazeci ansambl nije izabran");
+            UIHelper.showError(forma, errorPrefix + "\nRazlog: Važeći ansambl nije izabran");
             return null;
         }
 
