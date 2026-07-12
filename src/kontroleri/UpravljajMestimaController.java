@@ -41,14 +41,14 @@ public class UpravljajMestimaController {
             MestoTableModel model = new MestoTableModel(mesta);
             forma.getTblMesta().setModel(model);
         } catch (Exception e) {
-            UIHelper.showError(forma, "Greska pri ucitavanju mesta", e);
+            UIHelper.showError(forma, "Greška pri učitavanju mesta", e);
         }
     }
 
     private void addMesto() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv mesta:");
         if (naziv == null || naziv.trim().isEmpty()) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira mesto\nRazlog: Naziv ne sme biti prazan");
+            UIHelper.showError(forma, "Sistem ne može da kreira mesto\nRazlog: Naziv ne sme biti prazan");
             return;
         }
 
@@ -66,7 +66,7 @@ public class UpravljajMestimaController {
             loadMesta();
             UIHelper.showInfo(forma, "Sistem je kreirao mesto", "Uspeh");
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Sistem ne moze da kreira mesto", ex);
+            UIHelper.showError(forma, "Sistem ne može da kreira mesto", ex);
         }
     }
 }
