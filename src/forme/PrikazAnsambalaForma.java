@@ -103,9 +103,9 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTableAnsambli);
 
-        jButtonObrisi.setText("OBRISI");
+        jButtonObrisi.setText("OBRIŠI");
 
-        jToggleButtonAzuriraj.setText("AZURIRAJ");
+        jToggleButtonAzuriraj.setText("AŽURIRAJ");
 
         jLabel1.setText("Ime:");
 
@@ -115,7 +115,7 @@ public class PrikazAnsambalaForma extends javax.swing.JFrame {
 
         jButtonPretraga.setText("PRETRAGA");
 
-        jButtonPrikazi.setText("PRIKAZI");
+        jButtonPrikazi.setText("PRIKAŽI");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
