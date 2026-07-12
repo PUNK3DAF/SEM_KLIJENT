@@ -25,10 +25,10 @@ public class LoginController {
         Administrator a = komunikacija.Komunikacija.getInstanca().login(user, pass);
 
         if (a == null) {
-            UIHelper.showError(lf, "Pogresni kredencijali za prijavu");
+            UIHelper.showError(lf, "Pogrešni kredencijali za prijavu");
         } else {
             coordinator.Coordinator.getInstanca().setAdmin(a);
-            UIHelper.showInfo(lf, "Uspesno ste se prijavili", "USPEH");
+            UIHelper.showInfo(lf, "Uspešno ste se prijavili", "USPEH");
             coordinator.Coordinator.getInstanca().otvoriGlavnuFormu();
             lf.dispose();
         }
