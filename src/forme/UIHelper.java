@@ -17,7 +17,7 @@ public class UIHelper {
         if (ex != null && ex.getMessage() != null && !ex.getMessage().isEmpty()) {
             fullMessage += "\nRazlog: " + ex.getMessage();
         }
-        JOptionPane.showMessageDialog(parent, fullMessage, "GRESKA", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent, fullMessage, "GREŠKA", JOptionPane.ERROR_MESSAGE);
     }
     
     public static void showInfo(Component parent, String message) {
