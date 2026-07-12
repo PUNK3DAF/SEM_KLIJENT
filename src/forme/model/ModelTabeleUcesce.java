@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
 public class ModelTabeleUcesce extends AbstractTableModel {
 
     private List<Ucesce> lista;
-    private String[] kolone = {"Ansambl", "Clan", "Uloga"};
+    private String[] kolone = {"Ansambl", "član", "Uloga"};
 
     public ModelTabeleUcesce(List<Ucesce> lista) {
         if (lista == null) {
