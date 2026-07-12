@@ -193,12 +193,12 @@ public class DodajAnsamblController {
         try {
             zanrovi = komunikacija.Komunikacija.getInstanca().ucitajZanrove();
         } catch (Exception ex) {
-            UIHelper.showError(daf, "Greska pri ucitavanju zanrova", ex);
+            UIHelper.showError(daf, "Greška pri učitavanju žanrova", ex);
             return null;
         }
 
         if (zanrovi == null || zanrovi.isEmpty()) {
-            UIHelper.showError(daf, "Nema dostupnih zanrova. Prvo kreirajte zanr.");
+            UIHelper.showError(daf, "Nema dostupnih žanrova. Prvo kreirajte žanr.");
             return null;
         }
 
