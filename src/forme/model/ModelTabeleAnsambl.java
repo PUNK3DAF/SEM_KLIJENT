@@ -14,7 +14,7 @@ public class ModelTabeleAnsambl extends AbstractTableModel {
 
     List<Ansambl> lista;
     List<Ansambl> originalLista;
-    String[] kolone = {"ID", "Ime", "Opis", "Zanr", "Admin ID"};
+    String[] kolone = {"ID", "Ime", "Opis", "žanr", "Admin ID"};
 
     public ModelTabeleAnsambl(List<Ansambl> lista) {
         if (lista == null) {
