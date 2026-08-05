@@ -46,7 +46,9 @@ public class PrikazClanovaController {
                 try {
                     ClanDrustva full = get();
                     UIHelper.showInfo(pcf, "Sistem je učitao člana društva.");
-                    if (UIHelper.confirm(pcf, "Da li ste sigurni da želite da obrišete člana?") != 0) return;
+                    if (UIHelper.confirm(pcf, "Da li ste sigurni da želite da obrišete člana?") != 0) {
+                        return;
+                    }
                     komunikacija.Komunikacija.getInstanca().obrisiClanaDrustva(full);
                     UIHelper.showInfo(pcf, "Sistem je obrisao člana društva.");
                     pripremiFormu();
@@ -99,9 +101,10 @@ public class PrikazClanovaController {
         String ime = pcf.getjTextFieldIme().getText().trim();
         String pol = pcf.getjTextFieldPol().getText().trim();
         String god = pcf.getjTextFieldGod().getText().trim();
+        String email = pcf.getjTextFieldEmail().getText().trim();
         String admin = pcf.getjTextFieldAdmin().getText().trim();
         ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
-        mtc.pretrazi(ime, pol, god, admin);
+        mtc.pretrazi(ime, pol, god, email, admin);
 
         String msg = mtc.getLista() == null || mtc.getLista().isEmpty()
                 ? "Sistem ne može da nađe članove društva po zadatoj vrednosti."
@@ -151,7 +154,9 @@ public class PrikazClanovaController {
                 wrote = true;
             }
             if (adminUser != null && !adminUser.isEmpty()) {
-                if (wrote) sb.append(" ");
+                if (wrote) {
+                    sb.append(" ");
+                }
                 sb.append("(").append(adminUser).append(")");
                 wrote = true;
             }

@@ -74,21 +74,25 @@ public class ModelTabeleClan extends AbstractTableModel {
         return lista;
     }
 
-    public void pretrazi(String ime, String pol, String god, String admin) {
+    public void pretrazi(String ime, String pol, String god, String email, String admin) {
         String imeFilter = (ime == null) ? "" : ime.trim().toLowerCase();
         String polFilter = (pol == null) ? "" : pol.trim().toLowerCase();
         String godFilter = (god == null) ? "" : god.trim();
+        String emailFilter = (email == null) ? "" : email.trim().toLowerCase();
         String adminFilter = (admin == null) ? "" : admin.trim();
 
         List<ClanDrustva> filtriranaLista = originalLista.stream()
                 .filter(c -> {
                     String cIme = (c.getClanIme() == null) ? "" : c.getClanIme().toLowerCase();
-                    String cEmail = (c.getClanEmail() == null) ? "" : c.getClanEmail().toLowerCase();
-                    return imeFilter.isEmpty() || cIme.contains(imeFilter) || cEmail.contains(imeFilter);
+                    return imeFilter.isEmpty() || cIme.contains(imeFilter);
                 })
                 .filter(c -> {
                     String cPol = (c.getClanPol() == null) ? "" : c.getClanPol().toLowerCase();
                     return polFilter.isEmpty() || cPol.contains(polFilter);
+                })
+                .filter(c -> {
+                    String cEmail = (c.getClanEmail() == null) ? "" : c.getClanEmail().toLowerCase();
+                    return emailFilter.isEmpty() || cEmail.contains(emailFilter);
                 })
                 .filter(c -> {
                     if (godFilter.isEmpty()) {
