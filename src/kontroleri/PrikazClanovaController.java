@@ -29,7 +29,7 @@ public class PrikazClanovaController {
     private void handleObrisiClan() {
         int red = pcf.getjTableClanovi().getSelectedRow();
         if (red == -1) {
-            UIHelper.showError(pcf, "Sistem ne može da učita člana društva.");
+            UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", "Nije selektovan član društva");
             return;
         }
         ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
@@ -52,7 +52,7 @@ public class PrikazClanovaController {
                     pripremiFormu();
                     coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                 } catch (Exception ex) {
-                    UIHelper.showError(pcf, "Sistem ne može da obriše člana društva.", ex);
+                    UIHelper.showOperationError(pcf, "Sistem ne može da obriše člana društva", ex);
                 }
             }
         }.execute();
@@ -61,7 +61,7 @@ public class PrikazClanovaController {
     private void handleAzurirajClan() {
         int red = pcf.getjTableClanovi().getSelectedRow();
         if (red == -1) {
-            UIHelper.showError(pcf, "Sistem ne može da učita člana društva.");
+            UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", "Nije selektovan član društva");
             return;
         }
         ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
@@ -78,14 +78,14 @@ public class PrikazClanovaController {
                 try {
                     ClanDrustva full = get();
                     if (!isValid(full)) {
-                        UIHelper.showError(pcf, "Sistem je učitao člana, ali podaci nisu potpuni.");
+                        UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", "Učitani podaci o članu nisu potpuni");
                         return;
                     }
                     UIHelper.showInfo(pcf, "Sistem je učitao člana društva.");
                     coordinator.Coordinator.getInstanca().dodajParam("clan", full);
                     coordinator.Coordinator.getInstanca().otvoriIzmeniClanFormu();
                 } catch (Exception ex) {
-                    UIHelper.showError(pcf, "Sistem ne može da učita člana društva.", ex);
+                    UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", ex);
                 }
             }
         }.execute();
@@ -112,7 +112,7 @@ public class PrikazClanovaController {
     private void handlePrikazi() {
         int red = pcf.getjTableClanovi().getSelectedRow();
         if (red == -1) {
-            UIHelper.showError(pcf, "Sistem ne može da učita člana društva.");
+            UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", "Nije selektovan član društva");
             return;
         }
         ModelTabeleClan mtc = (ModelTabeleClan) pcf.getjTableClanovi().getModel();
@@ -122,7 +122,7 @@ public class PrikazClanovaController {
             String info = format(full);
             UIHelper.showInfo(pcf, info + "\n\nSistem je učitao člana društva.", "Detalji člana");
         } catch (Exception ex) {
-            UIHelper.showError(pcf, "Sistem ne može da učita člana društva.", ex);
+            UIHelper.showOperationError(pcf, "Sistem ne može da učita člana društva", ex);
         }
     }
 

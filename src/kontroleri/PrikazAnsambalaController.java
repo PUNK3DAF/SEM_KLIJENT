@@ -71,7 +71,7 @@ public class PrikazAnsambalaController {
     private Ansambl getSelectedAnsambl() {
         int red = paf.getjTableAnsambli().getSelectedRow();
         if (red == -1) {
-            UIHelper.showError(paf, Konstante.ENSEMBLE_NOT_SELECTED);
+            UIHelper.showOperationError(paf, Konstante.ENSEMBLE_NOT_SELECTED, "Nije selektovan ansambl");
             return null;
         }
         ModelTabeleAnsambl mta = (ModelTabeleAnsambl) paf.getjTableAnsambli().getModel();
@@ -90,7 +90,7 @@ public class PrikazAnsambalaController {
                 try {
                     onSuccess.accept(get());
                 } catch (Exception ex) {
-                    UIHelper.showError(paf, Konstante.ERROR_LOAD_ENSEMBLE, ex);
+                    UIHelper.showOperationError(paf, Konstante.ERROR_LOAD_ENSEMBLE, ex);
                 }
             }
         }.execute();
@@ -112,7 +112,7 @@ public class PrikazAnsambalaController {
                     osveziFormu();
                     coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
                 } catch (Exception ex) {
-                    UIHelper.showError(paf, Konstante.ERROR_DELETE_ENSEMBLE, ex);
+                    UIHelper.showOperationError(paf, Konstante.ERROR_DELETE_ENSEMBLE, ex);
                 }
             }
         }.execute();

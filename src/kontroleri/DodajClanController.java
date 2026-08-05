@@ -40,20 +40,21 @@ public class DodajClanController {
     }
 
     private void handleDodaj() {
+        String opError = Konstante.ERROR_CREATE_MEMBER;
         String ime = dcf.getjTextFieldIme().getText().trim();
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
-        if (!validirajIme(ime)) {
+        if (!validirajIme(ime, opError)) {
             return;
         }
 
-        String email = validirajRucniEmail();
+        String email = validirajRucniEmail(opError);
         if (email == null) {
             return;
         }
 
-        int god = parseGodine(godS);
+        int god = parseGodine(godS, opError);
         if (god == -1) return;
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
@@ -66,30 +67,31 @@ public class DodajClanController {
             dcf.dispose();
             coordinator.Coordinator.getInstanca().osveziClanFormu();
         } catch (Exception ex) {
-            UIHelper.showError(dcf, Konstante.ERROR_CREATE_MEMBER, ex);
+            UIHelper.showOperationError(dcf, Konstante.ERROR_CREATE_MEMBER, ex);
         }
     }
 
     private void handleAzuriraj() {
+        String opError = Konstante.ERROR_SAVE_MEMBER;
         String ime = dcf.getjTextFieldIme().getText().trim();
         String pol = dcf.getjTextFieldPol().getText().trim();
         String godS = dcf.getjTextFieldGod().getText().trim();
         String tel = dcf.getjTextFieldTel().getText().trim();
-        if (!validirajIme(ime)) {
+        if (!validirajIme(ime, opError)) {
             return;
         }
 
-        String email = validirajRucniEmail();
+        String email = validirajRucniEmail(opError);
         if (email == null) {
             return;
         }
 
-        int god = parseGodine(godS);
+        int god = parseGodine(godS, opError);
         if (god == -1) return;
 
         ClanDrustva original = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
         if (original == null) {
-            UIHelper.showError(dcf, Konstante.MEMBER_NOT_AVAILABLE);
+            UIHelper.showOperationError(dcf, Konstante.ERROR_SAVE_MEMBER, Konstante.MEMBER_NOT_AVAILABLE);
             return;
         }
 
@@ -105,17 +107,17 @@ public class DodajClanController {
             dcf.dispose();
             coordinator.Coordinator.getInstanca().osveziClanFormu();
         } catch (Exception ex) {
-            UIHelper.showError(dcf, Konstante.ERROR_SAVE_MEMBER, ex);
+            UIHelper.showOperationError(dcf, Konstante.ERROR_SAVE_MEMBER, ex);
             refreshFormFromServer(original);
         }
     }
 
-    private int parseGodine(String godS) {
+    private int parseGodine(String godS, String opError) {
         if (godS.isEmpty()) return 0;
         try {
             return Integer.parseInt(godS);
         } catch (NumberFormatException ex) {
-            UIHelper.showError(dcf, Konstante.ERROR_YEARS_INVALID);
+            UIHelper.showOperationError(dcf, opError, Konstante.ERROR_YEARS_INVALID);
             return -1;
         }
     }
@@ -204,30 +206,30 @@ public class DodajClanController {
         poslednjiAutoEmail = autoEmail;
     }
 
-    private boolean validirajIme(String ime) {
+    private boolean validirajIme(String ime, String opError) {
         if (ime == null || ime.trim().isEmpty()) {
-            UIHelper.showError(dcf, "Ime i prezime su obavezni.");
+            UIHelper.showOperationError(dcf, opError, "Ime i prezime su obavezni");
             return false;
         }
         if (ime.trim().split("\\s+").length < 2) {
-            UIHelper.showError(dcf, "Unesite ime i prezime.");
+            UIHelper.showOperationError(dcf, opError, "Unesite ime i prezime");
             return false;
         }
 
         return true;
     }
 
-    private String validirajRucniEmail() {
+    private String validirajRucniEmail(String opError) {
         String email = dcf.getjTextFieldEmail().getText();
         email = email == null ? "" : email.trim().toLowerCase();
 
         if (email.isEmpty()) {
-            UIHelper.showError(dcf, "Mejl je obavezan.");
+            UIHelper.showOperationError(dcf, opError, "Mejl je obavezan");
             return null;
         }
 
         if (!ClanDrustva.jeValidanEmail(email)) {
-            UIHelper.showError(dcf, "Mejl nije u ispravnom formatu.");
+            UIHelper.showOperationError(dcf, opError, "Mejl nije u ispravnom formatu");
             return null;
         }
         return email;

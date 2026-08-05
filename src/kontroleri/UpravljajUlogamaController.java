@@ -28,7 +28,7 @@ public class UpravljajUlogamaController {
         try {
             uloge = komunikacija.Komunikacija.getInstanca().ucitajUloge();
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Greška pri učitavanju uloga", ex);
+            UIHelper.showOperationError(forma, "Sistem ne može da učita uloge", ex);
         }
         forma.setUloge(uloge);
     }
@@ -36,7 +36,7 @@ public class UpravljajUlogamaController {
     private void handleDodaj() {
         String naziv = JOptionPane.showInputDialog(forma, "Unesite naziv uloge:", "Dodaj ulogu", JOptionPane.PLAIN_MESSAGE);
         if (naziv == null || naziv.trim().isEmpty()) {
-            UIHelper.showError(forma, "Sistem ne može da kreira ulogu\nRazlog: Naziv ne sme biti prazan");
+            UIHelper.showOperationError(forma, "Sistem ne može da kreira ulogu", "Naziv ne sme biti prazan");
             return;
         }
 
@@ -48,7 +48,7 @@ public class UpravljajUlogamaController {
             UIHelper.showInfo(forma, "Sistem je kreirao ulogu", "Uspeh");
             ucitajUloge();
         } catch (Exception ex) {
-            UIHelper.showError(forma, "Sistem ne može da kreira ulogu", ex);
+            UIHelper.showOperationError(forma, "Sistem ne može da kreira ulogu", ex);
         }
     }
 

@@ -25,7 +25,7 @@ public class LoginController {
         Administrator a = komunikacija.Komunikacija.getInstanca().login(user, pass);
 
         if (a == null) {
-            UIHelper.showError(lf, "Pogrešni kredencijali za prijavu");
+            UIHelper.showOperationError(lf, "Sistem ne može da pronađe administratora", "Pogrešni kredencijali za prijavu");
         } else {
             coordinator.Coordinator.getInstanca().setAdmin(a);
             UIHelper.showInfo(lf, "Uspešno ste se prijavili", "USPEH");

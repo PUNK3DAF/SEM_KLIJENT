@@ -60,7 +60,7 @@ public class DodajAnsamblController {
             daf.dispose();
             coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
         } catch (Exception ex) {
-            UIHelper.showError(daf, Konstante.ERROR_CREATE_ENSEMBLE, ex);
+            UIHelper.showOperationError(daf, Konstante.ERROR_CREATE_ENSEMBLE, ex);
         }
     }
 
@@ -74,7 +74,7 @@ public class DodajAnsamblController {
 
         Ansambl original = (Ansambl) coordinator.Coordinator.getInstanca().vratiParam("Ansambl");
         if (original == null) {
-            UIHelper.showError(daf, Konstante.ERROR_LOAD_ENSEMBLE);
+            UIHelper.showOperationError(daf, Konstante.ERROR_LOAD_ENSEMBLE, "Originalni ansambl nije dostupan za izmenu");
             return;
         }
 
@@ -97,7 +97,7 @@ public class DodajAnsamblController {
             coordinator.Coordinator.getInstanca().osveziFormu();
             coordinator.Coordinator.getInstanca().osveziGlavnuFormu();
         } catch (Exception ex) {
-            UIHelper.showError(daf, Konstante.ERROR_SAVE_ENSEMBLE, ex);
+            UIHelper.showOperationError(daf, Konstante.ERROR_SAVE_ENSEMBLE, ex);
             refreshFormFromServer(original);
         }
     }
@@ -113,7 +113,7 @@ public class DodajAnsamblController {
                 ? Konstante.ERROR_REQUIRED_NAME
                 : Konstante.ERROR_REQUIRED_DESCRIPTION;
 
-        UIHelper.showError(daf, errorMessage + "\nRazlog: " + reason);
+        UIHelper.showOperationError(daf, errorMessage, reason);
         return false;
     }
 
@@ -193,12 +193,12 @@ public class DodajAnsamblController {
         try {
             zanrovi = komunikacija.Komunikacija.getInstanca().ucitajZanrove();
         } catch (Exception ex) {
-            UIHelper.showError(daf, "Greška pri učitavanju žanrova", ex);
+            UIHelper.showOperationError(daf, "Sistem ne može da učita žanrove", ex);
             return null;
         }
 
         if (zanrovi == null || zanrovi.isEmpty()) {
-            UIHelper.showError(daf, "Nema dostupnih žanrova. Prvo kreirajte žanr.");
+            UIHelper.showOperationError(daf, "Sistem ne može da učita žanrove", "Ne postoji nijedan žanr");
             return null;
         }
 
