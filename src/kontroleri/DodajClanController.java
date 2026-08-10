@@ -55,10 +55,12 @@ public class DodajClanController {
         }
 
         int god = parseGodine(godS, opError);
-        if (god == -1) return;
+        if (god == -1) {
+            return;
+        }
 
         domen.Administrator admin = coordinator.Coordinator.getInstanca().getAdmin();
-        ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, admin);
+        ClanDrustva c = new ClanDrustva(-1, ime, pol, god, tel, email, admin);
         c.setClanEmail(email);
 
         try {
@@ -87,7 +89,9 @@ public class DodajClanController {
         }
 
         int god = parseGodine(godS, opError);
-        if (god == -1) return;
+        if (god == -1) {
+            return;
+        }
 
         ClanDrustva original = (ClanDrustva) coordinator.Coordinator.getInstanca().vratiParam("clan");
         if (original == null) {
@@ -113,7 +117,9 @@ public class DodajClanController {
     }
 
     private int parseGodine(String godS, String opError) {
-        if (godS.isEmpty()) return 0;
+        if (godS.isEmpty()) {
+            return 0;
+        }
         try {
             return Integer.parseInt(godS);
         } catch (NumberFormatException ex) {
@@ -123,7 +129,9 @@ public class DodajClanController {
     }
 
     private void refreshFormFromServer(ClanDrustva original) {
-        if (original == null || original.getClanID() <= 0) return;
+        if (original == null || original.getClanID() <= 0) {
+            return;
+        }
 
         new javax.swing.SwingWorker<ClanDrustva, Void>() {
             @Override
