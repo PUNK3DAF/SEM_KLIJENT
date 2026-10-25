@@ -149,7 +149,18 @@ public class UpravljajDogadjajController {
         }
 
         DogadjajTableModel model = (DogadjajTableModel) forma.getTblDogadjaji().getModel();
-        Dogadjaj dogadjaj = model.getDogadjajAt(selectedRow);
+        Dogadjaj izabraniDogadjaj = model.getDogadjajAt(selectedRow);
+        Dogadjaj dogadjaj;
+        try {
+            dogadjaj = Komunikacija.getInstanca().ucitajDogadjaj(izabraniDogadjaj.getDogadjajID());
+            if (dogadjaj == null) {
+                UIHelper.showOperationError(forma, "Sistem ne može da učita događaj", "Događaj više ne postoji");
+                return;
+            }
+        } catch (Exception ex) {
+            UIHelper.showOperationError(forma, "Sistem ne može da učita događaj", ex);
+            return;
+        }
 
         UIHelper.showInfo(forma, "Sistem je učitao događaj", "Uspeh");
 

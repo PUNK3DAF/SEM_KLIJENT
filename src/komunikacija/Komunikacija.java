@@ -243,6 +243,20 @@ public class Komunikacija {
         return dogadjaji == null ? new ArrayList<>() : dogadjaji;
     }
 
+    public Dogadjaj ucitajDogadjaj(int dogadjajId) throws Exception {
+        Dogadjaj probe = new Dogadjaj();
+        probe.setDogadjajID(dogadjajId);
+
+        Zahtev zahtev = new Zahtev(Operacije.UCITAJ_DOGADJAJ, probe);
+        posiljalac.posalji(zahtev);
+        Odgovor odgovor = (Odgovor) primalac.primi();
+
+        if (odgovor.getOdgovor() instanceof Exception) {
+            throw (Exception) odgovor.getOdgovor();
+        }
+        return (Dogadjaj) odgovor.getOdgovor();
+    }
+
     public void izmeniDogadjaj(Dogadjaj d) throws Exception {
         Zahtev zahtev = new Zahtev(Operacije.IZMENI_DOGADJAJ, d);
         posiljalac.posalji(zahtev);
